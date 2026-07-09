@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Product {
   const Product({
     required this.name,
@@ -18,6 +20,8 @@ class SmartPost {
     required this.trackTitle,
     required this.trackArtist,
     required this.caption,
+    required this.moodA,
+    required this.moodB,
     this.product,
   });
 
@@ -26,6 +30,14 @@ class SmartPost {
   final String trackArtist;
   final String caption;
   final Product? product;
+
+  /// Mood palette pulled from this post's own photo — every post gets its
+  /// own accent instead of one flat brand color reused everywhere.
+  final Color moodA;
+  final Color moodB;
+
+  LinearGradient get moodGradient =>
+      LinearGradient(colors: [moodA, moodB]);
 }
 
 class SharePlatform {

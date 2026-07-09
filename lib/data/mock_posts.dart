@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'models.dart';
 
 // Hardcoded demo data, verbatim from the Figma frames (per assignment brief:
@@ -8,6 +10,10 @@ const referralLink = 'www.oriflame.com/giordani/amada3012';
 
 /// User-edited captions, keyed by post index (session-local, no backend).
 final editedCaptions = <int, String>{};
+
+/// Liked / saved state — session-local, no backend.
+final likedPosts = <int>{};
+final savedPosts = <int>{};
 
 /// Full caption text for a post: the edit or the generated default.
 String captionTextFor(int index) =>
@@ -21,6 +27,9 @@ const mockPosts = [
     imageAsset: 'assets/images/bg_post1.jpg',
     trackTitle: 'Bad Habits',
     trackArtist: 'Ed Sheeran',
+    // Warm crimson-gold — lifted from the lipstick + night-lit fountain.
+    moodA: Color(0xFFE23B57),
+    moodB: Color(0xFFF2B84B),
     caption:
         "💄Elevate your beauty with the Giordani Gold - Eternal Glow Lipstick "
         "SPF 25! This luxurious creamy lipstick doesn't just promise rich "
@@ -39,6 +48,9 @@ const mockPosts = [
     imageAsset: 'assets/images/bg_post2.jpg',
     trackTitle: 'Unstoppable',
     trackArtist: 'Sia',
+    // Warm copper-champagne — lifted from the gold fabric + perfume glass.
+    moodA: Color(0xFFD9862E),
+    moodB: Color(0xFFF6DFA0),
     caption:
         '✨ Experience the elegance of Eclat Amour—a fragrance that captures '
         'the essence of romance and sophistication. Let every spritz wrap '
@@ -49,6 +61,9 @@ const mockPosts = [
     imageAsset: 'assets/images/bg_post3.jpg',
     trackTitle: 'Vogue',
     trackArtist: 'Madonna',
+    // Blush-lavender — lifted from the cake + flowers.
+    moodA: Color(0xFFE38DB8),
+    moodB: Color(0xFFB48CE0),
     caption:
         'Unlock the power of bold, beautiful lashes! With WonderLash '
         'Mascara, get ultimate length, volume, and definition for a '

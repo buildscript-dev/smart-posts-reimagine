@@ -12,8 +12,11 @@ const overlayTextShadows = [
 ];
 
 /// Avatar + gradient "Ready to share" pill (gentle looping pulse) + label.
+/// Tinted with the post's own mood color instead of one fixed brand color.
 class PostHeaderRow extends StatefulWidget {
-  const PostHeaderRow({super.key});
+  const PostHeaderRow({super.key, required this.mood});
+
+  final Color mood;
 
   @override
   State<PostHeaderRow> createState() => _PostHeaderRowState();
@@ -44,8 +47,7 @@ class _PostHeaderRowState extends State<PostHeaderRow>
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
-                  color: AppColors.brandGreen.withValues(alpha: .4),
-                  blurRadius: 10),
+                  color: widget.mood.withValues(alpha: .5), blurRadius: 10),
             ],
             image: const DecorationImage(
               image: AssetImage('assets/images/avatar.png'),
@@ -68,12 +70,12 @@ class _PostHeaderRowState extends State<PostHeaderRow>
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                        colors: [AppColors.pillPink, AppColors.pillPurple]),
+                    gradient: LinearGradient(
+                        colors: [widget.mood, AppColors.gold]),
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                          color: AppColors.brandGreen.withValues(alpha: .45),
+                          color: widget.mood.withValues(alpha: .5),
                           blurRadius: 12,
                           offset: const Offset(0, 3)),
                     ],
@@ -137,10 +139,12 @@ class PickCounter extends StatelessWidget {
 /// color and an internal scale transform change with the active index, so
 /// this can never itself be a source of layout overflow.
 class PageDots extends StatelessWidget {
-  const PageDots({super.key, required this.index, required this.total});
+  const PageDots(
+      {super.key, required this.index, required this.total, this.mood});
 
   final int index;
   final int total;
+  final Color? mood;
 
   @override
   Widget build(BuildContext context) {
@@ -165,12 +169,17 @@ class PageDots extends StatelessWidget {
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: i == index ? AppColors.heroGradient : null,
+                        gradient: i == index
+                            ? LinearGradient(colors: [
+                                mood ?? AppColors.brandGreen,
+                                AppColors.gold
+                              ])
+                            : null,
                         color: i == index ? null : Colors.white70,
                         boxShadow: i == index
                             ? [
                                 BoxShadow(
-                                    color: AppColors.brandGreen
+                                    color: (mood ?? AppColors.brandGreen)
                                         .withValues(alpha: .6),
                                     blurRadius: 8),
                               ]
@@ -381,11 +390,16 @@ class CaptionBlock extends StatefulWidget {
       {super.key,
       required this.post,
       required this.index,
-      required this.onEdit});
+      required this.onEdit,
+      this.alwaysExpanded = false});
 
   final SmartPost post;
   final int index;
   final VoidCallback onEdit;
+
+  /// True inside the Post Details sheet — shows the full caption with no
+  /// truncation/expand affordance.
+  final bool alwaysExpanded;
 
   @override
   State<CaptionBlock> createState() => _CaptionBlockState();
@@ -405,6 +419,7 @@ class _CaptionBlockState extends State<CaptionBlock>
         shadows: overlayTextShadows);
     final edited = editedCaptions[widget.index];
     final body = edited ?? widget.post.caption;
+    final expanded = widget.alwaysExpanded || _expanded;
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
       onTapCancel: () => setState(() => _pressed = false),
@@ -463,18 +478,21 @@ class _CaptionBlockState extends State<CaptionBlock>
               ),
               const SizedBox(height: 8),
               GestureDetector(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  setState(() => _expanded = !_expanded);
-                },
+                onTap: widget.alwaysExpanded
+                    ? null
+                    : () {
+                        HapticFeedback.lightImpact();
+                        setState(() => _expanded = !_expanded);
+                      },
                 child: AnimatedSize(
                   duration: Motion.base,
                   curve: Motion.smooth,
                   alignment: Alignment.topCenter,
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 150),
+                    constraints: BoxConstraints(
+                        maxHeight: widget.alwaysExpanded ? 1000 : 150),
                     child: SingleChildScrollView(
-                      physics: _expanded
+                      physics: expanded
                           ? const ClampingScrollPhysics()
                           : const NeverScrollableScrollPhysics(),
                       child: Text.rich(
@@ -486,10 +504,10 @@ class _CaptionBlockState extends State<CaptionBlock>
                               shadows: overlayTextShadows),
                           children: [
                             TextSpan(
-                                text: _expanded
+                                text: expanded
                                     ? body
                                     : '${body.substring(0, body.length < 64 ? body.length : 64)}... '),
-                            if (!_expanded)
+                            if (!expanded)
                               const TextSpan(
                                   text: 'see more',
                                   style: TextStyle(
@@ -506,12 +524,12 @@ class _CaptionBlockState extends State<CaptionBlock>
               if (edited == null) ...[
                 const SizedBox(height: 10),
                 Text('Use my referral code: $referralCode',
-                    maxLines: _expanded ? null : 1,
-                    overflow: _expanded ? null : TextOverflow.ellipsis,
+                    maxLines: expanded ? null : 1,
+                    overflow: expanded ? null : TextOverflow.ellipsis,
                     style: italic),
                 Text('Use my referral link: $referralLink',
-                    maxLines: _expanded ? null : 1,
-                    overflow: _expanded ? null : TextOverflow.ellipsis,
+                    maxLines: expanded ? null : 1,
+                    overflow: expanded ? null : TextOverflow.ellipsis,
                     style: italic),
               ],
             ],
@@ -588,6 +606,161 @@ class _ShareIconState extends State<_ShareIcon> {
         curve: Motion.spring,
         child: Image.asset(widget.platform.iconAsset,
             width: 46, height: 46, fit: BoxFit.contain),
+      ),
+    );
+  }
+}
+
+/// Slim collapsed info strip — replaces the old full-width caption/music
+/// panels that sat permanently on the photo. Only this thin bar (plus a
+/// short gradient scrim behind it) touches the image; tapping it opens the
+/// full Post Details sheet. The photo stays the star.
+class PostMiniBar extends StatefulWidget {
+  const PostMiniBar({
+    super.key,
+    required this.caption,
+    required this.trackTitle,
+    required this.mood,
+    required this.onTap,
+  });
+
+  final String caption;
+  final String trackTitle;
+  final Color mood;
+  final VoidCallback onTap;
+
+  @override
+  State<PostMiniBar> createState() => _PostMiniBarState();
+}
+
+class _PostMiniBarState extends State<PostMiniBar> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        widget.onTap();
+      },
+      child: AnimatedScale(
+        scale: _pressed ? 0.98 : 1.0,
+        duration: Motion.fast,
+        child: FrostedPanel(
+          radius: 16,
+          color: Colors.black.withValues(alpha: 0.16),
+          blur: 4,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+          child: Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                      colors: [widget.mood, AppColors.gold]),
+                ),
+                child:
+                    const Icon(Icons.music_note_rounded, color: Colors.white, size: 16),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(widget.caption,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            shadows: overlayTextShadows)),
+                    Text('♫ ${widget.trackTitle}  ·  tap for details',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 11,
+                            shadows: overlayTextShadows)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Icon(Icons.keyboard_arrow_up_rounded,
+                  color: Colors.white, size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Small floating tag (not a full card) so the product mention doesn't
+/// block the photo. Fades in after 3s per the designer note; tap opens the
+/// Post Details sheet scrolled to the product.
+class ProductChip extends StatefulWidget {
+  const ProductChip(
+      {super.key,
+      required this.discount,
+      required this.mood,
+      required this.onTap});
+
+  final String discount;
+  final Color mood;
+  final VoidCallback onTap;
+
+  @override
+  State<ProductChip> createState() => _ProductChipState();
+}
+
+class _ProductChipState extends State<ProductChip> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTap: () {
+        HapticFeedback.selectionClick();
+        widget.onTap();
+      },
+      child: AnimatedScale(
+        scale: _pressed ? 0.92 : 1.0,
+        duration: Motion.fast,
+        curve: Motion.spring,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [widget.mood, AppColors.gold]),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                  color: widget.mood.withValues(alpha: .5), blurRadius: 12),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.local_offer_rounded,
+                  color: Colors.white, size: 14),
+              const SizedBox(width: 6),
+              Text(widget.discount,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800)),
+            ],
+          ),
+        ),
       ),
     );
   }

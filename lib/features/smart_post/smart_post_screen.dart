@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,11 +11,15 @@ import '../share/generating_link_dialog.dart';
 import '../share/share_launcher.dart';
 import '../shell/camera_service.dart';
 import '../shell/shell.dart';
+import 'post_detail_sheet.dart';
+import 'widgets/action_rail.dart';
 import 'widgets/post_overlays.dart';
 
 /// Main feed. Chrome (header, tabs, bottom nav) stays put; only the media
 /// area pages vertically, reels-style — per the designer note
-/// "Show 3 posts. User can scroll like reels".
+/// "Show 3 posts. User can scroll like reels". The photo itself stays
+/// unobstructed: only a slim mini-bar touches it, full content lives in
+/// the Post Details sheet.
 class SmartPostScreen extends StatefulWidget {
   const SmartPostScreen({super.key});
 
@@ -38,8 +39,6 @@ class _SmartPostScreenState extends State<SmartPostScreen> {
 
   Future<void> _share(SharePlatform platform) async {
     HapticFeedback.mediumImpact();
-    // Figma loading sequence, then hand off to the platform's app
-    // (browser website when the app isn't installed).
     await showGeneratingLinkDialog(context);
     await launchPlatform(platform, text: captionTextFor(_page));
   }
@@ -56,13 +55,23 @@ class _SmartPostScreenState extends State<SmartPostScreen> {
     }
   }
 
+  void _openDetails(int index) {
+    showPostDetailSheet(
+      context,
+      post: mockPosts[index],
+      index: index,
+      onEditCaption: _editCaption,
+      onShare: _share,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final mood = mockPosts[_page].moodA;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          // Light chrome above the media area.
           ColoredBox(
             color: Colors.white,
             child: SafeArea(
@@ -81,7 +90,6 @@ class _SmartPostScreenState extends State<SmartPostScreen> {
           Expanded(
             child: Stack(
               children: [
-                // Media pager: each page = photo + its own overlays.
                 PageView.builder(
                   controller: _controller,
                   scrollDirection: Axis.vertical,
@@ -96,21 +104,18 @@ class _SmartPostScreenState extends State<SmartPostScreen> {
                     total: mockPosts.length,
                     onShare: _share,
                     onEditCaption: _editCaption,
+                    onOpenDetails: () => _openDetails(i),
                   ),
                 ),
-                // Persistent right-edge dots + bottom nav float over pages.
+                // Persistent dots — tinted to whichever post is on screen.
                 Positioned(
                   right: 14,
                   top: 0,
                   bottom: 0,
                   child: Align(
-                    // Design places the dots ~40% down the media area,
-                    // just above the music row.
-                    alignment: const Alignment(0, -0.15),
-                    child: Transform.translate(
-                      offset: const Offset(0, -25),
-                      child: PageDots(index: _page, total: mockPosts.length),
-                    ),
+                    alignment: const Alignment(0, -0.55),
+                    child: PageDots(
+                        index: _page, total: mockPosts.length, mood: mood),
                   ),
                 ),
                 Positioned(
@@ -140,6 +145,7 @@ class _PostMedia extends StatefulWidget {
     required this.total,
     required this.onShare,
     required this.onEditCaption,
+    required this.onOpenDetails,
   });
 
   final SmartPost post;
@@ -147,120 +153,180 @@ class _PostMedia extends StatefulWidget {
   final int total;
   final void Function(SharePlatform) onShare;
   final VoidCallback onEditCaption;
+  final VoidCallback onOpenDetails;
 
   @override
   State<_PostMedia> createState() => _PostMediaState();
 }
 
-class _PostMediaState extends State<_PostMedia> {
-  bool _showProduct = false;
-  // Random pick between the two Figma card variants — sometimes the
-  // trending message, sometimes the price.
-  final bool _trendingCard = Random().nextBool();
-  Timer? _timer;
+class _PostMediaState extends State<_PostMedia>
+    with TickerProviderStateMixin {
+  bool _showChip = false;
+  bool get _liked => likedPosts.contains(widget.index);
+  bool get _saved => savedPosts.contains(widget.index);
+
+  late final AnimationController _heartController = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 700));
+  late final Animation<double> _heartScale = TweenSequence([
+    TweenSequenceItem(
+        tween: Tween(begin: 0.0, end: 1.3)
+            .chain(CurveTween(curve: Curves.easeOutBack)),
+        weight: 45),
+    TweenSequenceItem(
+        tween: Tween(begin: 1.3, end: 1.0), weight: 20),
+    TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 1.0), weight: 15),
+    TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 20),
+  ]).animate(_heartController);
 
   @override
   void initState() {
     super.initState();
-    // Designer note: product info fades in from the bottom after 3 seconds.
     if (widget.post.product != null) {
-      _timer = Timer(
-        const Duration(seconds: 3),
-        () => setState(() => _showProduct = true),
-      );
+      Future.delayed(const Duration(seconds: 3),
+          () => mounted ? setState(() => _showChip = true) : null);
     }
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _heartController.dispose();
     super.dispose();
+  }
+
+  void _like({bool fromDoubleTap = false}) {
+    setState(() {
+      if (fromDoubleTap) {
+        likedPosts.add(widget.index);
+      } else {
+        if (_liked) {
+          likedPosts.remove(widget.index);
+        } else {
+          likedPosts.add(widget.index);
+        }
+      }
+    });
+    if (_liked) {
+      _heartController.forward(from: 0);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final product = widget.post.product;
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // Figma anchors the visible window to the photo's bottom edge.
-        Image.asset(
-          widget.post.imageAsset,
-          fit: BoxFit.cover,
-          alignment: Alignment.bottomCenter,
-        ),
-        // Header pinned to the top — independent of the bottom cluster, so
-        // neither can ever force the other into a RenderFlex overflow.
-        Positioned(
-          left: 16,
-          right: 16,
-          top: 14,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Expanded(child: PostHeaderRow()),
-              PickCounter(index: widget.index, total: widget.total),
-            ],
+    final mood = widget.post.moodA;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onDoubleTap: () {
+        HapticFeedback.mediumImpact();
+        _like(fromDoubleTap: true);
+      },
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            widget.post.imageAsset,
+            fit: BoxFit.cover,
+            alignment: Alignment.bottomCenter,
           ),
-        ),
-        // Bottom cluster sized to its own content (mainAxisSize.min) and
-        // anchored to the bottom edge — it can grow upward but can never
-        // overflow a fixed-height parent the way a Spacer-based Column could.
-        Positioned(
-          left: 16,
-          right: 16,
-          bottom: 92,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (product != null)
-                AnimatedSlide(
-                  offset: _showProduct ? Offset.zero : const Offset(0, 0.6),
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeOut,
-                  child: AnimatedOpacity(
-                    opacity: _showProduct ? 1 : 0,
+          // Double-tap heart burst — the "fall in love with the app" beat.
+          IgnorePointer(
+            child: Center(
+              child: AnimatedBuilder(
+                animation: _heartScale,
+                builder: (context, child) => Opacity(
+                  opacity: _heartScale.value.clamp(0.0, 1.0),
+                  child: Transform.scale(
+                      scale: _heartScale.value < 0
+                          ? 0
+                          : (_heartScale.value > 1.3 ? 1.3 : _heartScale.value),
+                      child: child),
+                ),
+                child: Icon(Icons.favorite_rounded,
+                    color: Colors.white, size: 110, shadows: [
+                  Shadow(color: mood.withValues(alpha: .8), blurRadius: 40),
+                ]),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 16,
+            right: 16,
+            top: 14,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: PostHeaderRow(mood: mood)),
+                PickCounter(index: widget.index, total: widget.total),
+              ],
+            ),
+          ),
+          // Floating action rail — right edge, clear of the header dots.
+          Positioned(
+            right: 18,
+            bottom: 172,
+            child: ActionRail(
+              mood: mood,
+              liked: _liked,
+              saved: _saved,
+              onLike: _like,
+              onComment: () => openAssistant(context),
+              onShare: widget.onOpenDetails,
+              onSave: () {
+                setState(() {
+                  if (_saved) {
+                    savedPosts.remove(widget.index);
+                  } else {
+                    savedPosts.add(widget.index);
+                  }
+                });
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(_saved
+                        ? 'Saved to your Library'
+                        : 'Removed from Library')));
+              },
+            ),
+          ),
+          // Only a slim strip + tiny product chip touch the photo now.
+          Positioned(
+            left: 16,
+            right: 100,
+            bottom: 92,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (product != null)
+                  AnimatedSlide(
+                    offset: _showChip ? Offset.zero : const Offset(0, 0.5),
                     duration: const Duration(milliseconds: 500),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      // keep the card clear of the page-dot indicator
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.sizeOf(context).width - 116,
-                        ),
-                        child: ProductCard(
-                          product: product,
-                          trending: _trendingCard,
-                          // Whole box clickable → personal beauty store link.
-                          onTap: () =>
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Opening your personal beauty store…',
-                                  ),
-                                ),
-                              ),
+                    curve: Curves.easeOut,
+                    child: AnimatedOpacity(
+                      opacity: _showChip ? 1 : 0,
+                      duration: const Duration(milliseconds: 500),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: ProductChip(
+                          discount: product.discount,
+                          mood: mood,
+                          onTap: widget.onOpenDetails,
                         ),
                       ),
                     ),
                   ),
+                PostMiniBar(
+                  caption: editedCaptions[widget.index] ?? widget.post.caption,
+                  trackTitle: widget.post.trackTitle,
+                  mood: mood,
+                  onTap: widget.onOpenDetails,
                 ),
-              const SizedBox(height: 10),
-              MusicRow(post: widget.post),
-              const SizedBox(height: 10),
-              CaptionBlock(
-                post: widget.post,
-                index: widget.index,
-                onEdit: widget.onEditCaption,
-              ),
-              const SizedBox(height: 14),
-              QuickShareRow(onShare: widget.onShare),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
-
