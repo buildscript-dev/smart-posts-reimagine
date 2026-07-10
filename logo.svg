@@ -1,20 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2E3634"/>
+      <stop offset="1" stop-color="#161B19"/>
+    </linearGradient>
     <linearGradient id="badge" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#3FAE91"/>
       <stop offset="1" stop-color="#0E7C66"/>
     </linearGradient>
   </defs>
-  <!-- camera body -->
-  <circle cx="430" cy="610" r="285" fill="#242927"/>
-  <!-- lens ring with shutter gap (upper-left) -->
-  <circle cx="445" cy="628" r="152" fill="none" stroke="#FFFFFF"
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- lens ring with shutter gap (upper-left), centered in safe zone -->
+  <circle cx="472" cy="562" r="140" fill="none" stroke="#FFFFFF"
           stroke-width="38" stroke-linecap="round"
-          stroke-dasharray="870 85" stroke-dashoffset="317"/>
-  <!-- AI badge -->
-  <rect x="556" y="196" width="308" height="250" rx="58" fill="url(#badge)"/>
-  <text x="710" y="366" font-family="DejaVu Serif" font-style="italic"
-        font-weight="bold" font-size="150" fill="#FFFFFF"
+          stroke-dasharray="806 74" stroke-dashoffset="293"/>
+  <!-- AI badge, overlapping the ring's top-right like the brand mark -->
+  <rect x="540" y="322" width="196" height="152" rx="42" fill="url(#badge)"/>
+  <text x="638" y="432" font-family="DejaVu Sans" font-style="italic"
+        font-weight="bold" font-size="86" fill="#FFFFFF"
         text-anchor="middle">AI</text>
-  <line x1="612" y1="340" x2="806" y2="340" stroke="#FFFFFF" stroke-width="10"/>
 </svg>
