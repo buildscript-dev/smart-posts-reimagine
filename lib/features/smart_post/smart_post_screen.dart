@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../app/theme.dart';
 import '../../data/mock_posts.dart';
@@ -38,41 +39,39 @@ class SmartPostScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Stack(
-              children: [
-                ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 100),
-                  itemCount: mockPosts.length,
-                  itemBuilder: (context, i) => Padding(
-                    padding: const EdgeInsets.only(bottom: 18),
-                    child: ExperimentPostCard(post: mockPosts[i], index: i),
-                  ),
+            // Snapping pages: exactly one card per screen — no next-card
+            // sliver peeking in under the current one.
+            child: PageView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: mockPosts.length,
+              onPageChanged: (_) => HapticFeedback.mediumImpact(),
+              itemBuilder: (context, i) => Padding(
+                padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+                child: ExperimentPostCard(
+                  post: mockPosts[i],
+                  index: i,
+                  fillHeight: true,
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: dark ? AppColors.darkSurface : Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.cardShadow.withValues(alpha: .25),
-                          blurRadius: 16,
-                          offset: const Offset(0, -4),
-                        ),
-                      ],
-                    ),
-                    child: SafeArea(
-                      top: false,
-                      child: AppBottomNav(
-                        color: dark ? Colors.white : AppColors.ink,
-                        onTap: (i) => goTab(context, tabFeed, i),
-                      ),
-                    ),
-                  ),
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: dark ? AppColors.darkSurface : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.cardShadow.withValues(alpha: .25),
+                  blurRadius: 16,
+                  offset: const Offset(0, -4),
                 ),
               ],
+            ),
+            child: SafeArea(
+              top: false,
+              child: AppBottomNav(
+                color: dark ? Colors.white : AppColors.ink,
+                onTap: (i) => goTab(context, tabFeed, i),
+              ),
             ),
           ),
         ],
