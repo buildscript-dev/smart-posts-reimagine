@@ -15,14 +15,14 @@ class SoftCard extends StatefulWidget {
     required this.child,
     this.onTap,
     this.padding = const EdgeInsets.all(16),
-    this.color = AppColors.surfaceCard,
+    this.color, // null = theme-adaptive (light surfaceCard / dark darkCard)
     this.radius = Corners.md,
   });
 
   final Widget child;
   final VoidCallback? onTap;
   final EdgeInsetsGeometry padding;
-  final Color color;
+  final Color? color;
   final double radius;
 
   @override
@@ -34,6 +34,9 @@ class _SoftCardState extends State<SoftCard> {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final resolvedColor =
+        widget.color ?? (dark ? AppColors.darkCard : AppColors.surfaceCard);
     final card = AnimatedScale(
       scale: _pressed ? 0.97 : 1.0,
       duration: Motion.fast,
@@ -41,7 +44,7 @@ class _SoftCardState extends State<SoftCard> {
       child: Container(
         padding: widget.padding,
         decoration: BoxDecoration(
-          color: widget.color,
+          color: resolvedColor,
           borderRadius: BorderRadius.circular(widget.radius),
           boxShadow: const [
             BoxShadow(

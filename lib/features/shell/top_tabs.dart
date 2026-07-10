@@ -12,6 +12,9 @@ class LibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ink = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : AppColors.ink;
     return ShellScaffold(
       index: -1,
       topTabIndex: 1,
@@ -55,10 +58,10 @@ class LibraryScreen extends StatelessWidget {
                           Text(p.caption,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.ink)),
+                                  color: ink)),
                           Text('♫ ${p.trackTitle}',
                               style: const TextStyle(
                                   fontSize: 11, color: AppColors.greyText)),

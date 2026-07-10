@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../app/theme.dart';
 import '../../data/mock_posts.dart';
 import '../../data/models.dart';
 import '../../shared/bottom_nav.dart';
@@ -68,12 +69,13 @@ class _SmartPostScreenState extends State<SmartPostScreen> {
   @override
   Widget build(BuildContext context) {
     final mood = mockPosts[_page].moodA;
+    final dark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
         children: [
           ColoredBox(
-            color: Colors.white,
+            color: dark ? AppColors.darkSurface : Colors.white,
             child: SafeArea(
               bottom: false,
               child: Column(

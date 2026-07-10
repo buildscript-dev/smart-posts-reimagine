@@ -24,6 +24,7 @@ abstract class AppColors {
   static const cream = Color(0xFFFBEFE0);
   static const darkBg = Color(0xFF160C13);
   static const darkSurface = Color(0xFF221420);
+  static const darkCard = Color(0xFF2E1A2A); // card fill on dark surfaces
 
   static const scrim = Colors.black26;
   static const gold = Color(0xFFCB9B4C); // muted antique gold, not neon
