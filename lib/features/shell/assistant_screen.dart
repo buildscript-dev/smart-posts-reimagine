@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../app/theme.dart';
 import '../../data/mock_shell.dart';
+import '../../shared/ui_kit.dart';
 
 /// "Your Assistant" — local rule-based chat (no backend, per the brief).
 class AssistantScreen extends StatefulWidget {
@@ -21,6 +23,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
   void _send() {
     final text = _input.text.trim();
     if (text.isEmpty) return;
+    HapticFeedback.lightImpact();
     setState(() {
       _messages.add((true, text));
       _messages.add((false, assistantReply(text)));
@@ -36,23 +39,27 @@ class _AssistantScreenState extends State<AssistantScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
               decoration: BoxDecoration(
-                color: AppColors.brandGreenLight,
-                borderRadius: BorderRadius.circular(5),
+                gradient: AppColors.heroGradient,
+                borderRadius: BorderRadius.circular(6),
               ),
               child: const Text('AI',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
-                      fontWeight: FontWeight.w700)),
+                      fontWeight: FontWeight.w800)),
             ),
             const SizedBox(width: 8),
             const Text('Your Assistant'),
@@ -72,22 +79,25 @@ class _AssistantScreenState extends State<AssistantScreen> {
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 10),
+                          horizontal: 15, vertical: 11),
                       constraints: const BoxConstraints(maxWidth: 300),
                       decoration: BoxDecoration(
-                        color: fromMe
-                            ? AppColors.brandGreen
-                            : AppColors.brandGreenLight
-                                .withValues(alpha: .22),
-                        borderRadius: BorderRadius.circular(16),
+                        gradient: fromMe ? AppColors.heroGradient : null,
+                        color: fromMe ? null : AppColors.surfaceCard,
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: AppColors.cardShadow,
+                              blurRadius: 12,
+                              offset: Offset(0, 3)),
+                        ],
                       ),
                       child: Text(text,
                           style: TextStyle(
                               height: 1.35,
                               color: fromMe
                                   ? Colors.white
-                                  : Theme.of(context).brightness ==
-                                          Brightness.dark
+                                  : dark
                                       ? Colors.white
                                       : AppColors.ink)),
                     ),
@@ -101,34 +111,68 @@ class _AssistantScreenState extends State<AssistantScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: _input,
-                      onSubmitted: (_) => _send(),
-                      decoration: InputDecoration(
-                        hintText: 'Ask your assistant…',
-                        filled: true,
-                        fillColor: AppColors.trackGrey.withValues(alpha: .6),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide.none,
+                    child: SoftCard(
+                      padding: EdgeInsets.zero,
+                      radius: 24,
+                      child: TextField(
+                        controller: _input,
+                        onSubmitted: (_) => _send(),
+                        decoration: const InputDecoration(
+                          hintText: 'Ask your assistant…',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 12),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 18, vertical: 10),
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  IconButton.filled(
-                    onPressed: _send,
-                    style: IconButton.styleFrom(
-                        backgroundColor: AppColors.brandGreen),
-                    icon: const Icon(Icons.send, color: Colors.white),
-                  ),
+                  _SendButton(onTap: _send),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SendButton extends StatefulWidget {
+  const _SendButton({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  State<_SendButton> createState() => _SendButtonState();
+}
+
+class _SendButtonState extends State<_SendButton> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _pressed ? 0.88 : 1.0,
+        duration: Motion.fast,
+        curve: Motion.spring,
+        child: Container(
+          padding: const EdgeInsets.all(13),
+          decoration: BoxDecoration(
+            gradient: AppColors.heroGradient,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.brandGreen.withValues(alpha: .4),
+                  blurRadius: 10),
+            ],
+          ),
+          child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+        ),
       ),
     );
   }

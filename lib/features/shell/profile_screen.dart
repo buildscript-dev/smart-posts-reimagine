@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../app/theme.dart';
 import '../../app/theme_controller.dart';
 import '../../data/gallery_store.dart';
 import '../../data/mock_posts.dart';
 import '../../data/mock_shell.dart';
+import '../../shared/ui_kit.dart';
 import 'shell.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -34,7 +36,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final ink = dark ? Colors.white : AppColors.ink;
-    // Gallery = camera shots (newest first) + the 3 post images as seed.
     final tiles = <ImageProvider>[
       for (final f in _shots) FileImage(f),
       for (final p in mockPosts) AssetImage(p.imageAsset),
@@ -43,70 +44,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
       index: tabProfile,
       onCameraReturn: _load,
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
         children: [
-          Row(
-            children: [
-              const CircleAvatar(
-                radius: 34,
-                backgroundImage: AssetImage('assets/images/avatar.png'),
+          // Hero card — gradient wash behind the avatar instead of a plain row.
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 22, 20, 18),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.brandGreen.withValues(alpha: .14),
+                  AppColors.gold.withValues(alpha: .10),
+                ],
               ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              borderRadius: BorderRadius.circular(Corners.lg),
+              border: Border.all(
+                  color: AppColors.brandGreen.withValues(alpha: .12)),
+            ),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Text(consultantName,
-                        style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                            color: ink)),
-                    Text(consultantSince,
-                        style: TextStyle(
-                            fontSize: 13, color: AppColors.greyText)),
-                    Text('Referral: $referralCode',
-                        style: const TextStyle(
-                            fontSize: 13, color: AppColors.brandGreen)),
+                    Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        gradient: AppColors.heroGradient,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const CircleAvatar(
+                        radius: 32,
+                        backgroundImage:
+                            AssetImage('assets/images/avatar.png'),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(consultantName,
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w800,
+                                  color: ink)),
+                          Text(consultantSince,
+                              style: const TextStyle(
+                                  fontSize: 13, color: AppColors.greyText)),
+                          const SizedBox(height: 3),
+                          Text('Referral: $referralCode',
+                              style: const TextStyle(
+                                  fontSize: 12.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.brandGreen)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              for (final s in dashStats)
-                Column(
+                const SizedBox(height: 18),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(s.value,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: ink)),
-                    Text(s.label,
-                        style: TextStyle(
-                            fontSize: 12, color: AppColors.greyText)),
+                    for (final s in dashStats)
+                      Column(
+                        children: [
+                          Text(s.value,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  color: ink)),
+                          Text(s.label,
+                              style: const TextStyle(
+                                  fontSize: 11.5, color: AppColors.greyText)),
+                        ],
+                      ),
                   ],
                 ),
-            ],
+              ],
+            ),
           ),
-          const SizedBox(height: 10),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text('Dark mode', style: TextStyle(color: ink)),
-            secondary: Icon(dark ? Icons.dark_mode : Icons.light_mode,
-                color: AppColors.brandGreen),
-            activeThumbColor: AppColors.brandGreen,
-            value: dark,
-            onChanged: (_) => toggleTheme(),
+          const SizedBox(height: 14),
+          SoftCard(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text('Dark mode',
+                  style: TextStyle(fontWeight: FontWeight.w600, color: ink)),
+              secondary: Icon(
+                  dark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                  color: AppColors.brandGreen),
+              activeThumbColor: AppColors.brandGreen,
+              value: dark,
+              onChanged: (_) {
+                HapticFeedback.selectionClick();
+                toggleTheme();
+              },
+            ),
           ),
-          const SizedBox(height: 6),
-          Text('Gallery',
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w600, color: ink)),
+          const SizedBox(height: 24),
+          const KickerLabel('Gallery'),
           const SizedBox(height: 4),
-          Text('Camera shots land here automatically',
+          const Text('Camera shots land here automatically',
               style: TextStyle(fontSize: 12, color: AppColors.greyText)),
           const SizedBox(height: 12),
           GridView.builder(
@@ -114,16 +153,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              mainAxisSpacing: 6,
-              crossAxisSpacing: 6,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
             ),
             itemCount: tiles.length,
             itemBuilder: (context, i) => GestureDetector(
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => _PhotoViewer(image: tiles[i]))),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image(image: tiles[i], fit: BoxFit.cover),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(Corners.sm),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: AppColors.cardShadow,
+                        blurRadius: 8,
+                        offset: Offset(0, 3)),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(Corners.sm),
+                  child: Image(image: tiles[i], fit: BoxFit.cover),
+                ),
               ),
             ),
           ),
