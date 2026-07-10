@@ -105,7 +105,8 @@ class CommunitiesScreen extends StatefulWidget {
   State<CommunitiesScreen> createState() => _CommunitiesScreenState();
 }
 
-class _CommunitiesScreenState extends State<CommunitiesScreen> {
+class _CommunitiesScreenState extends State<CommunitiesScreen>
+    with SingleTickerProviderStateMixin {
   final _communities = [
     ('Oriflame Community', '2.4k members', true),
     ('Lipstick Lovers', '860 members', false),
@@ -141,7 +142,16 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
 
   final _stackKey = GlobalKey();
   late final _pageScroll = ScrollController()..addListener(_onPageScroll);
-  double _stackReveal = 0;
+
+  // The stack's reveal doesn't jump straight to the scroll-derived target —
+  // it chases it over a short animation, so motion stays visible even when
+  // the page is scrolled fast or flung (a direct 1:1 lerp would complete
+  // within a single fling and look like an instant cut).
+  late final _revealAnim = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 180),
+  )..addListener(() => setState(() {}));
+  int _hapticBucket = -1;
 
   @override
   void initState() {
@@ -154,11 +164,18 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
     if (box == null || !box.attached) return;
     final screenHeight = MediaQuery.of(context).size.height;
     final topY = box.localToGlobal(Offset.zero).dy;
-    const revealDistance = 180.0;
+    const revealDistance = 280.0;
     final referenceY = screenHeight * 0.78;
     final next = ((referenceY - topY) / revealDistance).clamp(0.0, 1.0);
-    if ((next - _stackReveal).abs() > 0.002) {
-      setState(() => _stackReveal = next);
+
+    final bucket = (next * _communities.length).floor();
+    if (_hapticBucket != -1 && bucket != _hapticBucket) {
+      HapticFeedback.selectionClick();
+    }
+    _hapticBucket = bucket;
+
+    if ((next - _revealAnim.value).abs() > 0.001) {
+      _revealAnim.animateTo(next, curve: Curves.easeOut);
     }
   }
 
@@ -166,6 +183,7 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
   void dispose() {
     _earnController.dispose();
     _pageScroll.dispose();
+    _revealAnim.dispose();
     super.dispose();
   }
 
@@ -230,7 +248,7 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
       topTabIndex: 2,
       body: ListView(
         controller: _pageScroll,
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 36),
         children: [
           const SectionHeading('Communities'),
           const SizedBox(height: 16),
@@ -421,7 +439,7 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
             key: _stackKey,
             child: _CommunityStack(
               items: _communities,
-              reveal: _stackReveal,
+              reveal: _revealAnim.value,
               onToggleJoin: (i) => setState(
                 () => _communities[i] = (
                   _communities[i].$1,
@@ -431,6 +449,7 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 20),
         ],
       ),
     );
