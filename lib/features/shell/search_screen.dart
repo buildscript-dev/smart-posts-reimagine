@@ -14,6 +14,22 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   String _query = '';
+  final _focusNode = FocusNode();
+  bool _focused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(
+      () => setState(() => _focused = _focusNode.hasFocus),
+    );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,23 +51,40 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 4, 20, 10),
-            child: SoftCard(
-              padding: EdgeInsets.zero,
-              radius: Corners.lg,
-              child: TextField(
-                autofocus: false,
-                onChanged: (v) => setState(() => _query = v),
-                style: TextStyle(color: ink),
-                decoration: const InputDecoration(
-                  hintText: 'Search products, posts, people…',
-                  prefixIcon: Icon(
-                    Icons.search_rounded,
-                    color: AppColors.brandGreen,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 14,
+            child: AnimatedContainer(
+              duration: Motion.base,
+              curve: Motion.smooth,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(Corners.lg),
+                boxShadow: _focused
+                    ? [
+                        BoxShadow(
+                          color: AppColors.brandGreen.withValues(alpha: .3),
+                          blurRadius: 16,
+                          spreadRadius: 1,
+                        ),
+                      ]
+                    : null,
+              ),
+              child: SoftCard(
+                padding: EdgeInsets.zero,
+                radius: Corners.lg,
+                child: TextField(
+                  focusNode: _focusNode,
+                  autofocus: false,
+                  onChanged: (v) => setState(() => _query = v),
+                  style: TextStyle(color: ink),
+                  decoration: const InputDecoration(
+                    hintText: 'Search products, posts, people…',
+                    prefixIcon: Icon(
+                      Icons.search_rounded,
+                      color: AppColors.brandGreen,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 14,
+                    ),
                   ),
                 ),
               ),

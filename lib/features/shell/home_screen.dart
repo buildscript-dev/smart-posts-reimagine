@@ -26,12 +26,29 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             children: [
-              for (final s in dashStats) ...[
+              for (final (i, s) in dashStats.indexed) ...[
                 Expanded(
                   child: SoftCard(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Column(
                       children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            gradient: AppColors.heroGradient,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            const [
+                              Icons.grid_view_rounded,
+                              Icons.link_rounded,
+                              Icons.payments_rounded,
+                            ][i],
+                            color: Colors.white,
+                            size: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
                         ShaderMask(
                           shaderCallback: (r) =>
                               AppColors.heroGradient.createShader(r),
