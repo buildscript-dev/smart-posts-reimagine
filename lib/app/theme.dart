@@ -1,39 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Design system v2 — a deep, editorial berry replaces the candy-bright
-/// rose, every screen sits on a soft warm surface instead of stark white,
-/// and shadows/radii are unified into single tokens used everywhere.
+/// Design system v3 — moved off pink/gold entirely. Deep emerald-teal
+/// primary + warm copper accent, cool-neutral surfaces instead of the
+/// blush wash. Same token *names* as before (zero-risk swap across every
+/// screen); values changed.
 abstract class AppColors {
-  // Primary — deep berry, richer and more premium than a flat "brand pink".
-  static const brandGreen = Color(0xFFA61856); // primary — buttons, active states
-  static const brandGreenLight = Color(0xFFE0568C); // lighter accent, glows
-  static const deepGreen = Color(0xFF6E0F3B); // deepest shade — badges, text-on-light
+  // Primary — deep emerald teal.
+  static const brandGreen = Color(
+    0xFF0E7C66,
+  ); // primary — buttons, active states
+  static const brandGreenLight = Color(0xFF3FAE91); // lighter accent, glows
+  static const deepGreen = Color(
+    0xFF07463A,
+  ); // deepest shade — badges, text-on-light
 
-  static const pillPink = Color(0xFFA61856);
-  static const pillPurple = Color(0xFF5B1140);
+  // "Ready to share" pill gradient — copper into teal.
+  static const pillPink = Color(0xFFC1683B);
+  static const pillPurple = Color(0xFF0E7C66);
 
-  static const ink = Color(0xFF241521); // near-black w/ warm undertone
-  static const greyText = Color(0xFF8A7A85); // secondary text
-  static const greyMuted = Color(0xFFDCD0D6); // disabled / track fill
+  static const ink = Color(0xFF1B2422); // near-black w/ cool undertone
+  static const greyText = Color(0xFF798581); // secondary text
+  static const greyMuted = Color(0xFFD8DEDC); // disabled / track fill
 
-  // Surfaces — the whole point: nothing sits on stark white anymore.
-  static const surface = Color(0xFFFBF6F8); // scaffold background (light)
+  // Surfaces — cool neutral, not blush-tinted.
+  static const surface = Color(0xFFF5F8F7); // scaffold background (light)
   static const surfaceCard = Color(0xFFFFFFFF); // elevated card fill
-  static const trackGrey = Color(0xFFF1E9ED);
-  static const cream = Color(0xFFFBEFE0);
-  static const darkBg = Color(0xFF160C13);
-  static const darkSurface = Color(0xFF221420);
-  static const darkCard = Color(0xFF2E1A2A); // card fill on dark surfaces
+  static const trackGrey = Color(0xFFEBF1EF);
+  static const cream = Color(0xFFF3EADC);
+  static const darkBg = Color(0xFF0B1512); // near-black, teal-tinted
+  static const darkSurface = Color(0xFF13201C);
+  static const darkCard = Color(0xFF1C2E28); // card fill on dark surfaces
 
   static const scrim = Colors.black26;
-  static const gold = Color(0xFFCB9B4C); // muted antique gold, not neon
+  static const gold = Color(0xFFB97A45); // warm copper/bronze accent
 
   static const heroGradient = LinearGradient(colors: [brandGreen, deepGreen]);
-  static const goldGradient =
-      LinearGradient(colors: [gold, Color(0xFFA9772E)]);
+  static const goldGradient = LinearGradient(colors: [gold, Color(0xFF8C5A30)]);
 
-  static const cardShadow = Color(0x1F5B1140); // tinted, not flat black
+  static const cardShadow = Color(0x1F07463A); // tinted, not flat black
 }
 
 /// Shared motion tokens so every animated widget feels like one system.
@@ -65,7 +70,8 @@ ThemeData buildTheme() {
     dividerColor: AppColors.trackGrey,
   );
   return base.copyWith(
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme));
+    textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme),
+  );
 }
 
 ThemeData buildDarkTheme() {
@@ -80,6 +86,6 @@ ThemeData buildDarkTheme() {
     ),
   );
   return base.copyWith(
-      textTheme:
-          GoogleFonts.plusJakartaSansTextTheme(ThemeData.dark().textTheme));
+    textTheme: GoogleFonts.plusJakartaSansTextTheme(ThemeData.dark().textTheme),
+  );
 }

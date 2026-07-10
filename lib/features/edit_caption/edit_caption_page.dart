@@ -7,8 +7,7 @@ import '../../app/theme.dart';
 /// adapts to leave room for the keyboard so the header/Save button are
 /// never pushed off-screen, and the text area scrolls (no `expands: true`,
 /// which is the usual source of edit-field overflow).
-Future<String?> showEditCaptionSheet(
-    BuildContext context, String initialText) {
+Future<String?> showEditCaptionSheet(BuildContext context, String initialText) {
   return showModalBottomSheet<String>(
     context: context,
     isScrollControlled: true,
@@ -50,13 +49,16 @@ class _EditCaptionSheetState extends State<EditCaptionSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final ink = dark ? Colors.white : AppColors.ink;
     final media = MediaQuery.of(context);
     final keyboard = media.viewInsets.bottom;
     // Cap the sheet to whatever's left above the keyboard (plus a small
     // margin) so the header always stays visible — never a fixed height
     // that could overshoot the screen once the keyboard opens.
     final maxHeight = media.size.height * 0.78;
-    final availableHeight = media.size.height - keyboard - media.padding.top - 24;
+    final availableHeight =
+        media.size.height - keyboard - media.padding.top - 24;
     final height = availableHeight < maxHeight ? availableHeight : maxHeight;
 
     return AnimatedPadding(
@@ -67,9 +69,9 @@ class _EditCaptionSheetState extends State<EditCaptionSheet> {
         duration: Motion.fast,
         curve: Motion.smooth,
         height: height.clamp(280.0, maxHeight),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        decoration: BoxDecoration(
+          color: dark ? AppColors.darkCard : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         clipBehavior: Clip.antiAlias,
         child: SafeArea(
@@ -94,17 +96,19 @@ class _EditCaptionSheetState extends State<EditCaptionSheet> {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close_rounded,
-                          color: AppColors.ink),
+                      icon: Icon(Icons.close_rounded, color: ink),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
-                    const Expanded(
-                      child: Text('Edit Caption',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.ink)),
+                    Expanded(
+                      child: Text(
+                        'Edit Caption',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: ink,
+                        ),
+                      ),
                     ),
                     AnimatedScale(
                       scale: _dirty ? 1.0 : 0.94,
@@ -117,9 +121,11 @@ class _EditCaptionSheetState extends State<EditCaptionSheet> {
                           boxShadow: _dirty
                               ? [
                                   BoxShadow(
-                                      color: AppColors.brandGreen
-                                          .withValues(alpha: .4),
-                                      blurRadius: 10)
+                                    color: AppColors.brandGreen.withValues(
+                                      alpha: .4,
+                                    ),
+                                    blurRadius: 10,
+                                  ),
                                 ]
                               : null,
                         ),
@@ -127,21 +133,21 @@ class _EditCaptionSheetState extends State<EditCaptionSheet> {
                           onPressed: _dirty
                               ? () {
                                   HapticFeedback.mediumImpact();
-                                  Navigator.of(context)
-                                      .pop(_controller.text);
+                                  Navigator.of(context).pop(_controller.text);
                                 }
                               : null,
                           style: FilledButton.styleFrom(
                             backgroundColor: Colors.transparent,
-                            disabledBackgroundColor:
-                                AppColors.greyMuted.withValues(alpha: .5),
+                            disabledBackgroundColor: AppColors.greyMuted
+                                .withValues(alpha: .5),
                             disabledForegroundColor: AppColors.greyText,
                             shadowColor: Colors.transparent,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                           ),
-                          child: const Text('Save',
-                              style: TextStyle(fontWeight: FontWeight.w700)),
+                          child: const Text(
+                            'Save',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
                     ),
@@ -157,8 +163,7 @@ class _EditCaptionSheetState extends State<EditCaptionSheet> {
                     maxLines: null,
                     // No autofocus: keyboard appears on caption tap (2nd
                     // click), matching the annotated Figma flow.
-                    style: const TextStyle(
-                        fontSize: 15, height: 1.45, color: AppColors.ink),
+                    style: TextStyle(fontSize: 15, height: 1.45, color: ink),
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       isCollapsed: true,

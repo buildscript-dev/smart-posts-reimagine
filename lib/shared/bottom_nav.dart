@@ -6,8 +6,12 @@ import '../app/theme.dart';
 /// Redesigned floating nav — active icon pops into a gradient pill with a
 /// spring bounce; press states scale down with haptic feedback.
 class AppBottomNav extends StatefulWidget {
-  const AppBottomNav(
-      {super.key, this.color = Colors.white, this.onTap, this.activeIndex});
+  const AppBottomNav({
+    super.key,
+    this.color = Colors.white,
+    this.onTap,
+    this.activeIndex,
+  });
 
   final Color color;
   final void Function(int index)? onTap;
@@ -104,22 +108,28 @@ class _NavIcon extends StatelessWidget {
         child: AnimatedContainer(
           duration: Motion.base,
           curve: Motion.smooth,
-          padding:
-              EdgeInsets.symmetric(horizontal: active ? 18 : 8, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: active ? 18 : 8,
+            vertical: 8,
+          ),
           decoration: BoxDecoration(
             gradient: active ? AppColors.heroGradient : null,
             borderRadius: BorderRadius.circular(20),
             boxShadow: active
                 ? [
                     BoxShadow(
-                        color: AppColors.brandGreen.withValues(alpha: .5),
-                        blurRadius: 14,
-                        offset: const Offset(0, 4)),
+                      color: AppColors.brandGreen.withValues(alpha: .5),
+                      blurRadius: 14,
+                      offset: const Offset(0, 4),
+                    ),
                   ]
                 : null,
           ),
-          child: Icon(icon,
-              color: active ? Colors.white : color, size: active ? 24 : 26),
+          child: Icon(
+            icon,
+            color: active ? Colors.white : color,
+            size: active ? 24 : 26,
+          ),
         ),
       ),
     );

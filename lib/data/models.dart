@@ -36,13 +36,11 @@ class SmartPost {
   final Color moodA;
   final Color moodB;
 
-  LinearGradient get moodGradient =>
-      LinearGradient(colors: [moodA, moodB]);
+  LinearGradient get moodGradient => LinearGradient(colors: [moodA, moodB]);
 }
 
 class SharePlatform {
-  const SharePlatform(this.name, this.iconAsset, this.webUrl,
-      {this.textParam});
+  const SharePlatform(this.name, this.iconAsset, this.webUrl, {this.textParam});
 
   final String name;
   final String iconAsset;

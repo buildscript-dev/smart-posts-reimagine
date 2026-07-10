@@ -26,104 +26,121 @@ Future<void> showPostDetailSheet(
       minChildSize: 0.34,
       maxChildSize: 0.92,
       expand: false,
-      builder: (context, scrollController) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Container(
-              width: 40,
-              height: 5,
-              decoration: BoxDecoration(
-                color: AppColors.greyMuted,
-                borderRadius: BorderRadius.circular(3),
+      builder: (context, scrollController) {
+        final dark = Theme.of(context).brightness == Brightness.dark;
+        final ink = dark ? Colors.white : AppColors.ink;
+        return Container(
+          decoration: BoxDecoration(
+            color: dark ? AppColors.darkCard : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: AppColors.greyMuted,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 14, 20, 6),
-              child: Row(
-                children: [
-                  ShaderMask(
-                    shaderCallback: (rect) =>
-                        post.moodGradient.createShader(rect),
-                    child: const Icon(Icons.auto_awesome_rounded,
-                        color: Colors.white, size: 20),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Post details',
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.ink)),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                controller: scrollController,
-                padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-                children: [
-                  _DarkPanel(
-                    mood: post.moodA,
-                    child: MusicRow(post: post),
-                  ),
-                  const SizedBox(height: 12),
-                  _DarkPanel(
-                    mood: post.moodA,
-                    child: CaptionBlock(
-                      post: post,
-                      index: index,
-                      onEdit: () {
-                        Navigator.of(context).pop();
-                        onEditCaption();
-                      },
-                      alwaysExpanded: true,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 14, 20, 6),
+                child: Row(
+                  children: [
+                    ShaderMask(
+                      shaderCallback: (rect) =>
+                          post.moodGradient.createShader(rect),
+                      child: const Icon(
+                        Icons.auto_awesome_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                  if (post.product != null) ...[
-                    const SizedBox(height: 12),
-                    _DarkPanel(
-                      mood: post.moodA,
-                      child: ProductCard(
-                        product: post.product!,
-                        trending: true,
-                        onTap: () {},
+                    const SizedBox(width: 8),
+                    Text(
+                      'Post details',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: ink,
                       ),
                     ),
                   ],
-                  const SizedBox(height: 20),
-                  const Text('Quick share to',
-                      style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.greyText)),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 16,
-                    runSpacing: 12,
-                    children: [
-                      for (final p in sharePlatforms)
-                        GestureDetector(
-                          onTap: () {
-                            HapticFeedback.mediumImpact();
-                            Navigator.of(context).pop();
-                            onShare(p);
-                          },
-                          child: Image.asset(p.iconAsset,
-                              width: 44, height: 44, fit: BoxFit.contain),
-                        ),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+              Expanded(
+                child: ListView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+                  children: [
+                    _DarkPanel(
+                      mood: post.moodA,
+                      child: MusicRow(post: post),
+                    ),
+                    const SizedBox(height: 12),
+                    _DarkPanel(
+                      mood: post.moodA,
+                      child: CaptionBlock(
+                        post: post,
+                        index: index,
+                        onEdit: () {
+                          Navigator.of(context).pop();
+                          onEditCaption();
+                        },
+                        alwaysExpanded: true,
+                      ),
+                    ),
+                    if (post.product != null) ...[
+                      const SizedBox(height: 12),
+                      _DarkPanel(
+                        mood: post.moodA,
+                        child: ProductCard(
+                          product: post.product!,
+                          trending: true,
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Quick share to',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.greyText,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 16,
+                      runSpacing: 12,
+                      children: [
+                        for (final p in sharePlatforms)
+                          GestureDetector(
+                            onTap: () {
+                              HapticFeedback.mediumImpact();
+                              Navigator.of(context).pop();
+                              onShare(p);
+                            },
+                            child: Image.asset(
+                              p.iconAsset,
+                              width: 44,
+                              height: 44,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     ),
   );
 }

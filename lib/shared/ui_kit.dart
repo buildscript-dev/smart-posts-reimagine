@@ -48,7 +48,10 @@ class _SoftCardState extends State<SoftCard> {
           borderRadius: BorderRadius.circular(widget.radius),
           boxShadow: const [
             BoxShadow(
-                color: AppColors.cardShadow, blurRadius: 18, offset: Offset(0, 6)),
+              color: AppColors.cardShadow,
+              blurRadius: 18,
+              offset: Offset(0, 6),
+            ),
           ],
         ),
         child: widget.child,
@@ -110,8 +113,9 @@ class _AppButtonState extends State<AppButton> {
         curve: Motion.spring,
         child: Container(
           padding: EdgeInsets.symmetric(
-              horizontal: widget.compact ? 16 : 22,
-              vertical: widget.compact ? 8 : 12),
+            horizontal: widget.compact ? 16 : 22,
+            vertical: widget.compact ? 8 : 12,
+          ),
           decoration: BoxDecoration(
             gradient: widget.filled && enabled ? AppColors.heroGradient : null,
             color: !widget.filled
@@ -121,19 +125,23 @@ class _AppButtonState extends State<AppButton> {
             boxShadow: widget.filled && enabled
                 ? [
                     BoxShadow(
-                        color: AppColors.brandGreen.withValues(alpha: .35),
-                        blurRadius: 14,
-                        offset: const Offset(0, 5)),
+                      color: AppColors.brandGreen.withValues(alpha: .35),
+                      blurRadius: 14,
+                      offset: const Offset(0, 5),
+                    ),
                   ]
                 : null,
           ),
-          child: Text(widget.label,
-              style: TextStyle(
-                  color: widget.filled
-                      ? Colors.white
-                      : (enabled ? AppColors.deepGreen : AppColors.greyText),
-                  fontWeight: FontWeight.w700,
-                  fontSize: widget.compact ? 13 : 14.5)),
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              color: widget.filled
+                  ? Colors.white
+                  : (enabled ? AppColors.deepGreen : AppColors.greyText),
+              fontWeight: FontWeight.w700,
+              fontSize: widget.compact ? 13 : 14.5,
+            ),
+          ),
         ),
       ),
     );
@@ -159,17 +167,24 @@ class SectionHeading extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title,
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
-                      color: ink)),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.3,
+                  color: ink,
+                ),
+              ),
               if (subtitle != null) ...[
                 const SizedBox(height: 3),
-                Text(subtitle!,
-                    style:
-                        const TextStyle(fontSize: 13.5, color: AppColors.greyText)),
+                Text(
+                  subtitle!,
+                  style: const TextStyle(
+                    fontSize: 13.5,
+                    color: AppColors.greyText,
+                  ),
+                ),
               ],
             ],
           ),
@@ -188,11 +203,14 @@ class KickerLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text.toUpperCase(),
-        style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 0.8,
-            color: AppColors.brandGreen));
+    return Text(
+      text.toUpperCase(),
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.8,
+        color: AppColors.brandGreen,
+      ),
+    );
   }
 }

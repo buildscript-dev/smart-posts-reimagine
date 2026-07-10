@@ -25,9 +25,7 @@ class OriflameHeader extends StatelessWidget {
         children: [
           SizedBox(
             width: 64,
-            child: showAssistant
-                ? _AssistantChip(onTap: onAssistantTap)
-                : null,
+            child: showAssistant ? _AssistantChip(onTap: onAssistantTap) : null,
           ),
           Expanded(
             child: Center(
@@ -58,8 +56,11 @@ class OriflameHeader extends StatelessWidget {
                     color: AppColors.brandGreenLight,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.photo_camera_outlined,
-                      color: Colors.white, size: 26),
+                  child: const Icon(
+                    Icons.photo_camera_outlined,
+                    color: Colors.white,
+                    size: 26,
+                  ),
                 ),
               ),
             ),
@@ -94,11 +95,17 @@ class _AssistantChip extends StatelessWidget {
             // faint halo keeps the charcoal disc visible on the dark theme
             decoration: dark
                 ? const BoxDecoration(
-                    color: Colors.white, shape: BoxShape.circle)
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  )
                 : null,
             padding: dark ? const EdgeInsets.all(1.5) : EdgeInsets.zero,
-            child: Image.asset('assets/images/assistant_logo.png',
-                width: 44, height: 43, fit: BoxFit.contain),
+            child: Image.asset(
+              'assets/images/assistant_logo.png',
+              width: 44,
+              height: 43,
+              fit: BoxFit.contain,
+            ),
           ),
           const SizedBox(height: 2),
           Text('Your Assistant', style: TextStyle(fontSize: 9, color: ink)),

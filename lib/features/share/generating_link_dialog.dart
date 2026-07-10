@@ -21,7 +21,9 @@ Future<void> showGeneratingLinkDialog(BuildContext context) {
     barrierDismissible: false,
     barrierColor: Colors.black26,
     pageBuilder: (_, _, _) => const Material(
-        type: MaterialType.transparency, child: _GeneratingLinkDialog()),
+      type: MaterialType.transparency,
+      child: _GeneratingLinkDialog(),
+    ),
   );
 }
 
@@ -78,9 +80,10 @@ class _GeneratingLinkDialogState extends State<_GeneratingLinkDialog>
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                  color: AppColors.brandGreen.withValues(alpha: .25),
-                  blurRadius: 30,
-                  offset: const Offset(0, 12)),
+                color: AppColors.brandGreen.withValues(alpha: .25),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+              ),
             ],
           ),
           child: Column(
@@ -100,8 +103,11 @@ class _GeneratingLinkDialogState extends State<_GeneratingLinkDialog>
                     shape: BoxShape.circle,
                   ),
                   child: const Center(
-                    child: Icon(Icons.auto_awesome_rounded,
-                        color: Colors.white, size: 28),
+                    child: Icon(
+                      Icons.auto_awesome_rounded,
+                      color: Colors.white,
+                      size: 28,
+                    ),
                   ),
                 ),
               ),
@@ -109,20 +115,25 @@ class _GeneratingLinkDialogState extends State<_GeneratingLinkDialog>
               AnimatedSwitcher(
                 duration: Motion.base,
                 transitionBuilder: (child, anim) => FadeTransition(
-                    opacity: anim,
-                    child: SlideTransition(
-                        position: Tween(
-                                begin: const Offset(0, .3),
-                                end: Offset.zero)
-                            .animate(anim),
-                        child: child)),
-                child: Text(_stages[_stage],
-                    key: ValueKey(_stage),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.ink)),
+                  opacity: anim,
+                  child: SlideTransition(
+                    position: Tween(
+                      begin: const Offset(0, .3),
+                      end: Offset.zero,
+                    ).animate(anim),
+                    child: child,
+                  ),
+                ),
+                child: Text(
+                  _stages[_stage],
+                  key: ValueKey(_stage),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.ink,
+                  ),
+                ),
               ),
               const SizedBox(height: 18),
               AnimatedBuilder(
@@ -134,7 +145,8 @@ class _GeneratingLinkDialogState extends State<_GeneratingLinkDialog>
                     minHeight: 9,
                     backgroundColor: AppColors.trackGrey,
                     valueColor: const AlwaysStoppedAnimation(
-                        AppColors.brandGreen),
+                      AppColors.brandGreen,
+                    ),
                   ),
                 ),
               ),

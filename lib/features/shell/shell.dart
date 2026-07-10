@@ -16,12 +16,12 @@ import 'top_tabs.dart';
 const tabFeed = 0, tabSearch = 1, tabHome = 2, tabChat = 3, tabProfile = 4;
 
 Widget _screenFor(int index) => switch (index) {
-      tabSearch => const SearchScreen(),
-      tabHome => const HomeScreen(),
-      tabChat => const ChatListScreen(),
-      tabProfile => const ProfileScreen(),
-      _ => const SizedBox.shrink(),
-    };
+  tabSearch => const SearchScreen(),
+  tabHome => const HomeScreen(),
+  tabChat => const ChatListScreen(),
+  tabProfile => const ProfileScreen(),
+  _ => const SizedBox.shrink(),
+};
 
 /// Feed stays the root route. Icons push a shell page; switching between
 /// shell pages replaces it, so back always returns to the feed.
@@ -47,11 +47,12 @@ void goTopTab(BuildContext context, int current, int target) {
     return;
   }
   final route = MaterialPageRoute(
-      builder: (_) => switch (target) {
-            1 => const LibraryScreen(),
-            2 => const CommunitiesScreen(),
-            _ => const ShareWinScreen(),
-          });
+    builder: (_) => switch (target) {
+      1 => const LibraryScreen(),
+      2 => const CommunitiesScreen(),
+      _ => const ShareWinScreen(),
+    },
+  );
   if (current == 0) {
     Navigator.of(context).push(route);
   } else {
@@ -60,8 +61,9 @@ void goTopTab(BuildContext context, int current, int target) {
 }
 
 void openAssistant(BuildContext context) {
-  Navigator.of(context)
-      .push(MaterialPageRoute(builder: (_) => const AssistantScreen()));
+  Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (_) => const AssistantScreen()));
 }
 
 /// Shared scaffold for shell pages: brand header + body + working nav.

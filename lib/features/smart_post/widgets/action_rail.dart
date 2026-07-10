@@ -113,8 +113,9 @@ class _RailButtonState extends State<_RailButton> {
             boxShadow: widget.glow
                 ? [
                     BoxShadow(
-                        color: widget.color.withValues(alpha: .6),
-                        blurRadius: 14),
+                      color: widget.color.withValues(alpha: .6),
+                      blurRadius: 14,
+                    ),
                   ]
                 : null,
           ),

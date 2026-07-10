@@ -43,11 +43,15 @@ class _BuildingPostsScreenState extends State<BuildingPostsScreen> {
           PageRouteBuilder(
             pageBuilder: (_, _, _) => const SmartPostScreen(),
             transitionsBuilder: (_, anim, _, child) => FadeTransition(
-                opacity: anim,
-                child: ScaleTransition(
-                    scale: Tween(begin: 0.97, end: 1.0).animate(
-                        CurvedAnimation(parent: anim, curve: Motion.smooth)),
-                    child: child)),
+              opacity: anim,
+              child: ScaleTransition(
+                scale: Tween(
+                  begin: 0.97,
+                  end: 1.0,
+                ).animate(CurvedAnimation(parent: anim, curve: Motion.smooth)),
+                child: child,
+              ),
+            ),
             transitionDuration: Motion.slow,
           ),
         );
@@ -86,9 +90,12 @@ class _BuildingPostsScreenState extends State<BuildingPostsScreen> {
                 duration: Motion.slow,
                 curve: Motion.smooth,
                 builder: (context, v, child) => Opacity(
-                    opacity: v,
-                    child: Transform.translate(
-                        offset: Offset(0, (1 - v) * 16), child: child)),
+                  opacity: v,
+                  child: Transform.translate(
+                    offset: Offset(0, (1 - v) * 16),
+                    child: child,
+                  ),
+                ),
                 child: ShaderMask(
                   shaderCallback: (rect) =>
                       AppColors.heroGradient.createShader(rect),
@@ -96,9 +103,10 @@ class _BuildingPostsScreenState extends State<BuildingPostsScreen> {
                     'Building personalised\nSmart Posts for you!',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 27,
-                        fontWeight: FontWeight.w800,
-                        color: dark ? Colors.white : ink),
+                      fontSize: 27,
+                      fontWeight: FontWeight.w800,
+                      color: dark ? Colors.white : ink,
+                    ),
                   ),
                 ),
               ),
@@ -109,16 +117,19 @@ class _BuildingPostsScreenState extends State<BuildingPostsScreen> {
                   duration: Motion.slow,
                   curve: Motion.smooth,
                   builder: (context, v, child) => Opacity(
-                      opacity: v,
-                      child: Transform.translate(
-                          offset: Offset((1 - v) * 24, 0), child: child)),
+                    opacity: v,
+                    child: Transform.translate(
+                      offset: Offset((1 - v) * 24, 0),
+                      child: child,
+                    ),
+                  ),
                   child: _StepRow(
                     label: _steps[i],
                     state: i < _done
                         ? _StepState.done
                         : i == _done
-                            ? _StepState.active
-                            : _StepState.pending,
+                        ? _StepState.active
+                        : _StepState.pending,
                     dark: dark,
                   ),
                 ),
@@ -134,11 +145,14 @@ class _BuildingPostsScreenState extends State<BuildingPostsScreen> {
                   child: ShaderMask(
                     shaderCallback: (rect) =>
                         AppColors.goldGradient.createShader(rect),
-                    child: const Text('All set! Get ready to share...',
-                        style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white)),
+                    child: const Text(
+                      'All set! Get ready to share...',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -155,8 +169,11 @@ class _BuildingPostsScreenState extends State<BuildingPostsScreen> {
 enum _StepState { pending, active, done }
 
 class _StepRow extends StatelessWidget {
-  const _StepRow(
-      {required this.label, required this.state, required this.dark});
+  const _StepRow({
+    required this.label,
+    required this.state,
+    required this.dark,
+  });
 
   final String label;
   final _StepState state;
@@ -166,8 +183,9 @@ class _StepRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final active = state == _StepState.active;
     final done = state == _StepState.done;
-    final textColor =
-        done || active ? (dark ? Colors.white : AppColors.ink) : AppColors.greyMuted;
+    final textColor = done || active
+        ? (dark ? Colors.white : AppColors.ink)
+        : AppColors.greyMuted;
 
     Widget indicator;
     switch (state) {
@@ -183,12 +201,16 @@ class _StepRow extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                      color: AppColors.brandGreen.withValues(alpha: .5),
-                      blurRadius: 10),
+                    color: AppColors.brandGreen.withValues(alpha: .5),
+                    blurRadius: 10,
+                  ),
                 ],
               ),
-              child: const Icon(Icons.check_circle_rounded,
-                  color: AppColors.brandGreen, size: 26),
+              child: const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.brandGreen,
+                size: 26,
+              ),
             ),
           ),
         );
@@ -197,7 +219,9 @@ class _StepRow extends StatelessWidget {
           width: 22,
           height: 22,
           child: CircularProgressIndicator(
-              strokeWidth: 3, color: AppColors.brandGreen),
+            strokeWidth: 3,
+            color: AppColors.brandGreen,
+          ),
         );
       case _StepState.pending:
         indicator = Container(

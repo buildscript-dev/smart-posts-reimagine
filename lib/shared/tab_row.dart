@@ -42,8 +42,7 @@ class SmartTabRow extends StatelessWidget {
                                   onTap!(i);
                                 },
                           child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                             child: AnimatedDefaultTextStyle(
                               duration: Motion.base,
                               curve: Motion.smooth,
@@ -56,8 +55,8 @@ class SmartTabRow extends StatelessWidget {
                                 color: i == activeIndex
                                     ? AppColors.brandGreen
                                     : dark
-                                        ? Colors.white
-                                        : AppColors.ink,
+                                    ? Colors.white
+                                    : AppColors.ink,
                               ),
                               child: Text(
                                 _tabs[i],
@@ -74,7 +73,8 @@ class SmartTabRow extends StatelessWidget {
                 AnimatedPositioned(
                   duration: Motion.base,
                   curve: Motion.smooth,
-                  left: activeIndex * slotWidth +
+                  left:
+                      activeIndex * slotWidth +
                       (slotWidth - _underlineWidth) / 2,
                   bottom: 2,
                   width: _underlineWidth,

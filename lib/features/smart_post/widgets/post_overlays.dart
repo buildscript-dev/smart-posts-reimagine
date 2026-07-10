@@ -24,9 +24,10 @@ class PostHeaderRow extends StatefulWidget {
 
 class _PostHeaderRowState extends State<PostHeaderRow>
     with SingleTickerProviderStateMixin {
-  late final _pulse =
-      AnimationController(vsync: this, duration: const Duration(seconds: 2))
-        ..repeat(reverse: true);
+  late final _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 2),
+  )..repeat(reverse: true);
 
   @override
   void dispose() {
@@ -47,7 +48,9 @@ class _PostHeaderRowState extends State<PostHeaderRow>
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
-                  color: widget.mood.withValues(alpha: .5), blurRadius: 10),
+                color: widget.mood.withValues(alpha: .5),
+                blurRadius: 10,
+              ),
             ],
             image: const DecorationImage(
               image: AssetImage('assets/images/avatar.png'),
@@ -68,34 +71,44 @@ class _PostHeaderRowState extends State<PostHeaderRow>
                 ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 4),
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                        colors: [widget.mood, AppColors.gold]),
+                      colors: [widget.mood, AppColors.gold],
+                    ),
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                          color: widget.mood.withValues(alpha: .5),
-                          blurRadius: 12,
-                          offset: const Offset(0, 3)),
+                        color: widget.mood.withValues(alpha: .5),
+                        blurRadius: 12,
+                        offset: const Offset(0, 3),
+                      ),
                     ],
                   ),
-                  child: const Text('✨ Ready to share',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700)),
+                  child: const Text(
+                    '✨ Ready to share',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 4),
-              const Text('High-converting in Oriflame Community',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      shadows: overlayTextShadows)),
+              const Text(
+                'High-converting in Oriflame Community',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  shadows: overlayTextShadows,
+                ),
+              ),
             ],
           ),
         ),
@@ -116,7 +129,9 @@ class PickCounter extends StatelessWidget {
     return AnimatedSwitcher(
       duration: Motion.base,
       transitionBuilder: (child, anim) => ScaleTransition(
-          scale: anim, child: FadeTransition(opacity: anim, child: child)),
+        scale: anim,
+        child: FadeTransition(opacity: anim, child: child),
+      ),
       child: Container(
         key: ValueKey(index),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -125,11 +140,14 @@ class PickCounter extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white24),
         ),
-        child: Text('${index + 1} of $total',
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w700)),
+        child: Text(
+          '${index + 1} of $total',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
     );
   }
@@ -139,8 +157,12 @@ class PickCounter extends StatelessWidget {
 /// color and an internal scale transform change with the active index, so
 /// this can never itself be a source of layout overflow.
 class PageDots extends StatelessWidget {
-  const PageDots(
-      {super.key, required this.index, required this.total, this.mood});
+  const PageDots({
+    super.key,
+    required this.index,
+    required this.total,
+    this.mood,
+  });
 
   final int index;
   final int total;
@@ -170,18 +192,21 @@ class PageDots extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: i == index
-                            ? LinearGradient(colors: [
-                                mood ?? AppColors.brandGreen,
-                                AppColors.gold
-                              ])
+                            ? LinearGradient(
+                                colors: [
+                                  mood ?? AppColors.brandGreen,
+                                  AppColors.gold,
+                                ],
+                              )
                             : null,
                         color: i == index ? null : Colors.white70,
                         boxShadow: i == index
                             ? [
                                 BoxShadow(
-                                    color: (mood ?? AppColors.brandGreen)
-                                        .withValues(alpha: .6),
-                                    blurRadius: 8),
+                                  color: (mood ?? AppColors.brandGreen)
+                                      .withValues(alpha: .6),
+                                  blurRadius: 8,
+                                ),
                               ]
                             : null,
                       ),
@@ -209,9 +234,10 @@ class MusicRow extends StatefulWidget {
 
 class _MusicRowState extends State<MusicRow>
     with SingleTickerProviderStateMixin {
-  late final _bob =
-      AnimationController(vsync: this, duration: const Duration(seconds: 1))
-        ..repeat(reverse: true);
+  late final _bob = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  )..repeat(reverse: true);
 
   @override
   void dispose() {
@@ -228,27 +254,35 @@ class _MusicRowState extends State<MusicRow>
         children: [
           AnimatedBuilder(
             animation: _bob,
-            builder: (_, child) =>
-                Transform.rotate(angle: (_bob.value - 0.5) * 0.35, child: child),
-            child: const Icon(Icons.music_note_rounded,
-                color: AppColors.gold, size: 19),
+            builder: (_, child) => Transform.rotate(
+              angle: (_bob.value - 0.5) * 0.35,
+              child: child,
+            ),
+            child: const Icon(
+              Icons.music_note_rounded,
+              color: AppColors.gold,
+              size: 19,
+            ),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text.rich(
               TextSpan(
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    shadows: overlayTextShadows),
+                  color: Colors.white,
+                  fontSize: 14,
+                  shadows: overlayTextShadows,
+                ),
                 children: [
                   const TextSpan(text: 'Recommended:  '),
                   TextSpan(
-                      text: widget.post.trackTitle,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontStyle: FontStyle.italic,
-                          color: AppColors.gold)),
+                    text: widget.post.trackTitle,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.gold,
+                    ),
+                  ),
                   TextSpan(text: ' by ${widget.post.trackArtist}'),
                 ],
               ),
@@ -263,11 +297,12 @@ class _MusicRowState extends State<MusicRow>
 
 /// Product card — press-scale interaction, gradient discount badge, glow.
 class ProductCard extends StatefulWidget {
-  const ProductCard(
-      {super.key,
-      required this.product,
-      required this.onTap,
-      this.trending = true});
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.onTap,
+    this.trending = true,
+  });
 
   final Product product;
   final VoidCallback onTap;
@@ -281,21 +316,23 @@ class _ProductCardState extends State<ProductCard> {
   bool _pressed = false;
 
   Widget _badge() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-        decoration: BoxDecoration(
-          gradient: AppColors.goldGradient,
-          borderRadius: BorderRadius.circular(6),
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.gold.withValues(alpha: .5), blurRadius: 6),
-          ],
-        ),
-        child: Text(widget.product.discount,
-            style: const TextStyle(
-                color: AppColors.ink,
-                fontSize: 11.5,
-                fontWeight: FontWeight.w800)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+    decoration: BoxDecoration(
+      gradient: AppColors.goldGradient,
+      borderRadius: BorderRadius.circular(6),
+      boxShadow: [
+        BoxShadow(color: AppColors.gold.withValues(alpha: .5), blurRadius: 6),
+      ],
+    ),
+    child: Text(
+      widget.product.discount,
+      style: const TextStyle(
+        color: AppColors.ink,
+        fontSize: 11.5,
+        fontWeight: FontWeight.w800,
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -333,27 +370,37 @@ class _ProductCardState extends State<ProductCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(product.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w700)),
+                    Text(
+                      product.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                     const SizedBox(height: 4),
                     if (widget.trending)
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.trending_up_rounded,
-                              color: AppColors.gold, size: 15),
+                          const Icon(
+                            Icons.trending_up_rounded,
+                            color: AppColors.gold,
+                            size: 15,
+                          ),
                           const SizedBox(width: 4),
                           const Flexible(
-                            child: Text('Trending right now and on sale',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 11.5)),
+                            child: Text(
+                              'Trending right now and on sale',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11.5,
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 6),
                           _badge(),
@@ -363,11 +410,14 @@ class _ProductCardState extends State<ProductCard> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(product.price,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700)),
+                          Text(
+                            product.price,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           const SizedBox(width: 8),
                           _badge(),
                         ],
@@ -386,12 +436,13 @@ class _ProductCardState extends State<ProductCard> {
 
 /// Caption block — animated edit-pencil wiggle on tap, smooth expand.
 class CaptionBlock extends StatefulWidget {
-  const CaptionBlock(
-      {super.key,
-      required this.post,
-      required this.index,
-      required this.onEdit,
-      this.alwaysExpanded = false});
+  const CaptionBlock({
+    super.key,
+    required this.post,
+    required this.index,
+    required this.onEdit,
+    this.alwaysExpanded = false,
+  });
 
   final SmartPost post;
   final int index;
@@ -413,10 +464,11 @@ class _CaptionBlockState extends State<CaptionBlock>
   @override
   Widget build(BuildContext context) {
     const italic = TextStyle(
-        color: Colors.white,
-        fontSize: 13.5,
-        fontStyle: FontStyle.italic,
-        shadows: overlayTextShadows);
+      color: Colors.white,
+      fontSize: 13.5,
+      fontStyle: FontStyle.italic,
+      shadows: overlayTextShadows,
+    );
     final edited = editedCaptions[widget.index];
     final body = edited ?? widget.post.caption;
     final expanded = widget.alwaysExpanded || _expanded;
@@ -442,37 +494,49 @@ class _CaptionBlockState extends State<CaptionBlock>
                       gradient: AppColors.heroGradient,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Text('AI',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w800)),
+                    child: const Text(
+                      'AI',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Flexible(
-                    child: Text('CAPTION SUGGESTION',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.4,
-                            shadows: overlayTextShadows)),
+                    child: Text(
+                      'CAPTION SUGGESTION',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.4,
+                        shadows: overlayTextShadows,
+                      ),
+                    ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.auto_fix_high_rounded,
-                      color: AppColors.gold, size: 16),
+                  const Icon(
+                    Icons.auto_fix_high_rounded,
+                    color: AppColors.gold,
+                    size: 16,
+                  ),
                   const SizedBox(width: 5),
                   Flexible(
-                    child: Text('Edit Caption',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w700,
-                            shadows: overlayTextShadows)),
+                    child: Text(
+                      'Edit Caption',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w700,
+                        shadows: overlayTextShadows,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -490,7 +554,8 @@ class _CaptionBlockState extends State<CaptionBlock>
                   alignment: Alignment.topCenter,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                        maxHeight: widget.alwaysExpanded ? 1000 : 150),
+                      maxHeight: widget.alwaysExpanded ? 1000 : 150,
+                    ),
                     child: SingleChildScrollView(
                       physics: expanded
                           ? const ClampingScrollPhysics()
@@ -498,22 +563,26 @@ class _CaptionBlockState extends State<CaptionBlock>
                       child: Text.rich(
                         TextSpan(
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              height: 1.35,
-                              shadows: overlayTextShadows),
+                            color: Colors.white,
+                            fontSize: 14,
+                            height: 1.35,
+                            shadows: overlayTextShadows,
+                          ),
                           children: [
                             TextSpan(
-                                text: expanded
-                                    ? body
-                                    : '${body.substring(0, body.length < 64 ? body.length : 64)}... '),
+                              text: expanded
+                                  ? body
+                                  : '${body.substring(0, body.length < 64 ? body.length : 64)}... ',
+                            ),
                             if (!expanded)
                               const TextSpan(
-                                  text: 'see more',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      color: AppColors.gold,
-                                      decoration: TextDecoration.underline)),
+                                text: 'see more',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.gold,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -523,14 +592,18 @@ class _CaptionBlockState extends State<CaptionBlock>
               ),
               if (edited == null) ...[
                 const SizedBox(height: 10),
-                Text('Use my referral code: $referralCode',
-                    maxLines: expanded ? null : 1,
-                    overflow: expanded ? null : TextOverflow.ellipsis,
-                    style: italic),
-                Text('Use my referral link: $referralLink',
-                    maxLines: expanded ? null : 1,
-                    overflow: expanded ? null : TextOverflow.ellipsis,
-                    style: italic),
+                Text(
+                  'Use my referral code: $referralCode',
+                  maxLines: expanded ? null : 1,
+                  overflow: expanded ? null : TextOverflow.ellipsis,
+                  style: italic,
+                ),
+                Text(
+                  'Use my referral link: $referralLink',
+                  maxLines: expanded ? null : 1,
+                  overflow: expanded ? null : TextOverflow.ellipsis,
+                  style: italic,
+                ),
               ],
             ],
           ),
@@ -550,12 +623,15 @@ class QuickShareRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text('Quick share to:',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                shadows: overlayTextShadows)),
+        const Text(
+          'Quick share to:',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            shadows: overlayTextShadows,
+          ),
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: SizedBox(
@@ -604,8 +680,12 @@ class _ShareIconState extends State<_ShareIcon> {
         scale: _pressed ? 1.22 : 1.0,
         duration: Motion.fast,
         curve: Motion.spring,
-        child: Image.asset(widget.platform.iconAsset,
-            width: 46, height: 46, fit: BoxFit.contain),
+        child: Image.asset(
+          widget.platform.iconAsset,
+          width: 46,
+          height: 46,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
@@ -664,10 +744,14 @@ class _PostMiniBarState extends State<PostMiniBar> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                      colors: [widget.mood, AppColors.gold]),
+                    colors: [widget.mood, AppColors.gold],
+                  ),
                 ),
-                child:
-                    const Icon(Icons.music_note_rounded, color: Colors.white, size: 16),
+                child: const Icon(
+                  Icons.music_note_rounded,
+                  color: Colors.white,
+                  size: 16,
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -675,27 +759,36 @@ class _PostMiniBarState extends State<PostMiniBar> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(widget.caption,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            shadows: overlayTextShadows)),
-                    Text('♫ ${widget.trackTitle}  ·  tap for details',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 11,
-                            shadows: overlayTextShadows)),
+                    Text(
+                      widget.caption,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        shadows: overlayTextShadows,
+                      ),
+                    ),
+                    Text(
+                      '♫ ${widget.trackTitle}  ·  tap for details',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                        shadows: overlayTextShadows,
+                      ),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(Icons.keyboard_arrow_up_rounded,
-                  color: Colors.white, size: 20),
+              const Icon(
+                Icons.keyboard_arrow_up_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
             ],
           ),
         ),
@@ -708,11 +801,12 @@ class _PostMiniBarState extends State<PostMiniBar> {
 /// block the photo. Fades in after 3s per the designer note; tap opens the
 /// Post Details sheet scrolled to the product.
 class ProductChip extends StatefulWidget {
-  const ProductChip(
-      {super.key,
-      required this.discount,
-      required this.mood,
-      required this.onTap});
+  const ProductChip({
+    super.key,
+    required this.discount,
+    required this.mood,
+    required this.onTap,
+  });
 
   final String discount;
   final Color mood;
@@ -746,20 +840,28 @@ class _ProductChipState extends State<ProductChip> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                  color: widget.mood.withValues(alpha: .5), blurRadius: 12),
+                color: widget.mood.withValues(alpha: .5),
+                blurRadius: 12,
+              ),
             ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.local_offer_rounded,
-                  color: Colors.white, size: 14),
+              const Icon(
+                Icons.local_offer_rounded,
+                color: Colors.white,
+                size: 14,
+              ),
               const SizedBox(width: 6),
-              Text(widget.discount,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w800)),
+              Text(
+                widget.discount,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ],
           ),
         ),

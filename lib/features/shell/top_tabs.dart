@@ -21,8 +21,10 @@ class LibraryScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
         children: [
-          const SectionHeading('Your Library',
-              subtitle: 'Saved posts, ready to reshare anytime'),
+          const SectionHeading(
+            'Your Library',
+            subtitle: 'Saved posts, ready to reshare anytime',
+          ),
           const SizedBox(height: 18),
           GridView.builder(
             shrinkWrap: true,
@@ -45,8 +47,11 @@ class LibraryScreen extends StatelessWidget {
                     Expanded(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(Corners.sm),
-                        child: Image.asset(p.imageAsset,
-                            width: double.infinity, fit: BoxFit.cover),
+                        child: Image.asset(
+                          p.imageAsset,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -55,16 +60,23 @@ class LibraryScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(p.caption,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: ink)),
-                          Text('♫ ${p.trackTitle}',
-                              style: const TextStyle(
-                                  fontSize: 11, color: AppColors.greyText)),
+                          Text(
+                            p.caption,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: ink,
+                            ),
+                          ),
+                          Text(
+                            '♫ ${p.trackTitle}',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: AppColors.greyText,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -114,7 +126,9 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
               padding: const EdgeInsets.only(bottom: 10),
               child: SoftCard(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 12),
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     Container(
@@ -125,23 +139,34 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
                         shape: BoxShape.circle,
                       ),
                       alignment: Alignment.center,
-                      child: Text(_communities[i].$1[0],
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16)),
+                      child: Text(
+                        _communities[i].$1[0],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_communities[i].$1,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700, color: ink)),
-                          Text(_communities[i].$2,
-                              style: const TextStyle(
-                                  fontSize: 12.5, color: AppColors.greyText)),
+                          Text(
+                            _communities[i].$1,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: ink,
+                            ),
+                          ),
+                          Text(
+                            _communities[i].$2,
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              color: AppColors.greyText,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -149,11 +174,13 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
                       compact: true,
                       filled: !_communities[i].$3,
                       label: _communities[i].$3 ? 'Joined' : 'Join',
-                      onTap: () => setState(() => _communities[i] = (
-                            _communities[i].$1,
-                            _communities[i].$2,
-                            !_communities[i].$3,
-                          )),
+                      onTap: () => setState(
+                        () => _communities[i] = (
+                          _communities[i].$1,
+                          _communities[i].$2,
+                          !_communities[i].$3,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -195,27 +222,34 @@ class ShareWinScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(Corners.lg),
               boxShadow: [
                 BoxShadow(
-                    color: AppColors.brandGreen.withValues(alpha: .35),
-                    blurRadius: 22,
-                    offset: const Offset(0, 8)),
+                  color: AppColors.brandGreen.withValues(alpha: .35),
+                  blurRadius: 22,
+                  offset: const Offset(0, 8),
+                ),
               ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('WEEKLY CHALLENGE',
-                    style: TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.8,
-                        color: Colors.white70)),
+                const Text(
+                  'WEEKLY CHALLENGE',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.8,
+                    color: Colors.white70,
+                  ),
+                ),
                 const SizedBox(height: 6),
-                const Text('Share $goal Smart Posts, win a Giordani Gold set',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        height: 1.25,
-                        color: Colors.white)),
+                const Text(
+                  'Share $goal Smart Posts, win a Giordani Gold set',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    height: 1.25,
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
@@ -223,14 +257,14 @@ class ShareWinScreen extends StatelessWidget {
                     value: shared / goal,
                     minHeight: 10,
                     backgroundColor: Colors.white24,
-                    valueColor:
-                        const AlwaysStoppedAnimation(AppColors.gold),
+                    valueColor: const AlwaysStoppedAnimation(AppColors.gold),
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text('$shared of $goal shared — ${goal - shared} to go!',
-                    style: const TextStyle(
-                        fontSize: 13, color: Colors.white70)),
+                Text(
+                  '$shared of $goal shared — ${goal - shared} to go!',
+                  style: const TextStyle(fontSize: 13, color: Colors.white70),
+                ),
               ],
             ),
           ),
@@ -241,8 +275,10 @@ class ShareWinScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: SoftCard(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     Container(
@@ -254,25 +290,34 @@ class ShareWinScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       alignment: Alignment.center,
-                      child: Text('${i + 1}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              color: i == 0 ? Colors.white : AppColors.ink)),
+                      child: Text(
+                        '${i + 1}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: i == 0 ? Colors.white : AppColors.ink,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(leaderboard[i].$1,
-                          style: TextStyle(
-                              color: ink,
-                              fontWeight: leaderboard[i].$1.contains('(you)')
-                                  ? FontWeight.w800
-                                  : FontWeight.w500)),
+                      child: Text(
+                        leaderboard[i].$1,
+                        style: TextStyle(
+                          color: ink,
+                          fontWeight: leaderboard[i].$1.contains('(you)')
+                              ? FontWeight.w800
+                              : FontWeight.w500,
+                        ),
+                      ),
                     ),
-                    Text('${leaderboard[i].$2} shares',
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.greyText)),
+                    Text(
+                      '${leaderboard[i].$2} shares',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.greyText,
+                      ),
+                    ),
                   ],
                 ),
               ),

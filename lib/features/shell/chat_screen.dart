@@ -25,10 +25,15 @@ class ChatListScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: SoftCard(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ChatThreadScreen(thread: t))),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ChatThreadScreen(thread: t),
+                  ),
+                ),
                 child: Row(
                   children: [
                     Container(
@@ -39,26 +44,37 @@ class ChatListScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       alignment: Alignment.center,
-                      child: Text(t.name[0],
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 17)),
+                      child: Text(
+                        t.name[0],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 17,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(t.name,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700, color: ink)),
+                          Text(
+                            t.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: ink,
+                            ),
+                          ),
                           const SizedBox(height: 2),
-                          Text(t.lastMessage,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 12.5, color: AppColors.greyText)),
+                          Text(
+                            t.lastMessage,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              color: AppColors.greyText,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -66,17 +82,22 @@ class ChatListScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(t.time,
-                            style: const TextStyle(
-                                fontSize: 11.5, color: AppColors.greyText)),
+                        Text(
+                          t.time,
+                          style: const TextStyle(
+                            fontSize: 11.5,
+                            color: AppColors.greyText,
+                          ),
+                        ),
                         if (t.unread)
                           Container(
                             margin: const EdgeInsets.only(top: 6),
                             width: 9,
                             height: 9,
                             decoration: const BoxDecoration(
-                                gradient: AppColors.heroGradient,
-                                shape: BoxShape.circle),
+                              gradient: AppColors.heroGradient,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                       ],
                     ),
@@ -139,28 +160,36 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
               children: [
                 for (final (fromMe, text) in widget.thread.messages)
                   Align(
-                    alignment:
-                        fromMe ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: fromMe
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 11),
+                        horizontal: 15,
+                        vertical: 11,
+                      ),
                       constraints: const BoxConstraints(maxWidth: 280),
                       decoration: BoxDecoration(
                         gradient: fromMe ? AppColors.heroGradient : null,
                         color: fromMe
                             ? null
-                            : (dark ? AppColors.darkCard : AppColors.surfaceCard),
+                            : (dark
+                                  ? AppColors.darkCard
+                                  : AppColors.surfaceCard),
                         borderRadius: BorderRadius.circular(18),
                         boxShadow: const [
                           BoxShadow(
-                              color: AppColors.cardShadow,
-                              blurRadius: 12,
-                              offset: Offset(0, 3)),
+                            color: AppColors.cardShadow,
+                            blurRadius: 12,
+                            offset: Offset(0, 3),
+                          ),
                         ],
                       ),
-                      child: Text(text,
-                          style: TextStyle(color: fromMe ? Colors.white : ink)),
+                      child: Text(
+                        text,
+                        style: TextStyle(color: fromMe ? Colors.white : ink),
+                      ),
                     ),
                   ),
               ],
@@ -182,7 +211,9 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
                           hintText: 'Message…',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 18, vertical: 12),
+                            horizontal: 18,
+                            vertical: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -228,8 +259,9 @@ class _SendButtonState extends State<_SendButton> {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                  color: AppColors.brandGreen.withValues(alpha: .4),
-                  blurRadius: 10),
+                color: AppColors.brandGreen.withValues(alpha: .4),
+                blurRadius: 10,
+              ),
             ],
           ),
           child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),

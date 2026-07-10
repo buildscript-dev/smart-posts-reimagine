@@ -117,7 +117,10 @@ class _SmartPostScreenState extends State<SmartPostScreen> {
                   child: Align(
                     alignment: const Alignment(0, -0.55),
                     child: PageDots(
-                        index: _page, total: mockPosts.length, mood: mood),
+                      index: _page,
+                      total: mockPosts.length,
+                      mood: mood,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -161,34 +164,42 @@ class _PostMedia extends StatefulWidget {
   State<_PostMedia> createState() => _PostMediaState();
 }
 
-class _PostMediaState extends State<_PostMedia>
-    with TickerProviderStateMixin {
+class _PostMediaState extends State<_PostMedia> with TickerProviderStateMixin {
   bool _showChip = false;
   bool get _liked => likedPosts.contains(widget.index);
   bool get _saved => savedPosts.contains(widget.index);
 
   late final AnimationController _heartController = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 700));
+    vsync: this,
+    duration: const Duration(milliseconds: 700),
+  );
   late final Animation<double> _heartScale = TweenSequence([
     TweenSequenceItem(
-        tween: Tween(begin: 0.0, end: 1.3)
-            .chain(CurveTween(curve: Curves.easeOutBack)),
-        weight: 45),
+      tween: Tween(
+        begin: 0.0,
+        end: 1.3,
+      ).chain(CurveTween(curve: Curves.easeOutBack)),
+      weight: 45,
+    ),
+    TweenSequenceItem(tween: Tween(begin: 1.3, end: 1.0), weight: 20),
+    TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.0), weight: 15),
     TweenSequenceItem(
-        tween: Tween(begin: 1.3, end: 1.0), weight: 20),
-    TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.0), weight: 15),
-    TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn)),
-        weight: 20),
+      tween: Tween(
+        begin: 1.0,
+        end: 0.0,
+      ).chain(CurveTween(curve: Curves.easeIn)),
+      weight: 20,
+    ),
   ]).animate(_heartController);
 
   @override
   void initState() {
     super.initState();
     if (widget.post.product != null) {
-      Future.delayed(const Duration(seconds: 3),
-          () => mounted ? setState(() => _showChip = true) : null);
+      Future.delayed(
+        const Duration(seconds: 3),
+        () => mounted ? setState(() => _showChip = true) : null,
+      );
     }
   }
 
@@ -241,15 +252,20 @@ class _PostMediaState extends State<_PostMedia>
                 builder: (context, child) => Opacity(
                   opacity: _heartScale.value.clamp(0.0, 1.0),
                   child: Transform.scale(
-                      scale: _heartScale.value < 0
-                          ? 0
-                          : (_heartScale.value > 1.3 ? 1.3 : _heartScale.value),
-                      child: child),
+                    scale: _heartScale.value < 0
+                        ? 0
+                        : (_heartScale.value > 1.3 ? 1.3 : _heartScale.value),
+                    child: child,
+                  ),
                 ),
-                child: Icon(Icons.favorite_rounded,
-                    color: Colors.white, size: 110, shadows: [
-                  Shadow(color: mood.withValues(alpha: .8), blurRadius: 40),
-                ]),
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.white,
+                  size: 110,
+                  shadows: [
+                    Shadow(color: mood.withValues(alpha: .8), blurRadius: 40),
+                  ],
+                ),
               ),
             ),
           ),
@@ -284,10 +300,13 @@ class _PostMediaState extends State<_PostMedia>
                     savedPosts.add(widget.index);
                   }
                 });
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(_saved
-                        ? 'Saved to your Library'
-                        : 'Removed from Library')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      _saved ? 'Saved to your Library' : 'Removed from Library',
+                    ),
+                  ),
+                );
               },
             ),
           ),

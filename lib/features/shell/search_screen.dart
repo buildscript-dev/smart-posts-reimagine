@@ -23,10 +23,12 @@ class _SearchScreenState extends State<SearchScreen> {
     final results = _query.isEmpty
         ? searchCorpus
         : searchCorpus
-            .where((s) =>
-                s.title.toLowerCase().contains(_query.toLowerCase()) ||
-                s.subtitle.toLowerCase().contains(_query.toLowerCase()))
-            .toList();
+              .where(
+                (s) =>
+                    s.title.toLowerCase().contains(_query.toLowerCase()) ||
+                    s.subtitle.toLowerCase().contains(_query.toLowerCase()),
+              )
+              .toList();
     return ShellScaffold(
       index: tabSearch,
       body: Column(
@@ -42,11 +44,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 style: TextStyle(color: ink),
                 decoration: const InputDecoration(
                   hintText: 'Search products, posts, people…',
-                  prefixIcon:
-                      Icon(Icons.search_rounded, color: AppColors.brandGreen),
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: AppColors.brandGreen,
+                  ),
                   border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 4, vertical: 14),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 14,
+                  ),
                 ),
               ),
             ),
@@ -54,11 +60,13 @@ class _SearchScreenState extends State<SearchScreen> {
           Expanded(
             child: results.isEmpty
                 ? Center(
-                    child: Text('No results for "$_query"',
-                        style: const TextStyle(color: AppColors.greyText)))
+                    child: Text(
+                      'No results for "$_query"',
+                      style: const TextStyle(color: AppColors.greyText),
+                    ),
+                  )
                 : ListView.builder(
-                    padding:
-                        const EdgeInsets.fromLTRB(20, 4, 20, 24),
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
                     itemCount: results.length,
                     itemBuilder: (context, i) {
                       final r = results[i];
@@ -66,7 +74,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: SoftCard(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
                           child: Row(
                             children: [
                               Container(
@@ -74,8 +84,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 42,
                                 decoration: BoxDecoration(
                                   gradient: AppColors.heroGradient,
-                                  borderRadius:
-                                      BorderRadius.circular(Corners.sm),
+                                  borderRadius: BorderRadius.circular(
+                                    Corners.sm,
+                                  ),
                                 ),
                                 child: Icon(
                                   switch (r.kind) {
@@ -90,35 +101,46 @@ class _SearchScreenState extends State<SearchScreen> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(r.title,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: ink)),
-                                    Text(r.subtitle,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            fontSize: 12.5,
-                                            color: AppColors.greyText)),
+                                    Text(
+                                      r.title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: ink,
+                                      ),
+                                    ),
+                                    Text(
+                                      r.subtitle,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12.5,
+                                        color: AppColors.greyText,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 3),
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.brandGreen
-                                      .withValues(alpha: .12),
+                                  color: AppColors.brandGreen.withValues(
+                                    alpha: .12,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: Text(r.kind,
-                                    style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.brandGreen)),
+                                child: Text(
+                                  r.kind,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.brandGreen,
+                                  ),
+                                ),
                               ),
                             ],
                           ),

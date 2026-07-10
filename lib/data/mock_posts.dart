@@ -27,9 +27,9 @@ const mockPosts = [
     imageAsset: 'assets/images/bg_post1.jpg',
     trackTitle: 'Bad Habits',
     trackArtist: 'Ed Sheeran',
-    // Warm crimson-gold — lifted from the lipstick + night-lit fountain.
-    moodA: Color(0xFFE23B57),
-    moodB: Color(0xFFF2B84B),
+    // Deep teal into warm copper — night-lit fountain + gold lipstick case.
+    moodA: Color(0xFF0E7C66),
+    moodB: Color(0xFFC1683B),
     caption:
         "💄Elevate your beauty with the Giordani Gold - Eternal Glow Lipstick "
         "SPF 25! This luxurious creamy lipstick doesn't just promise rich "
@@ -48,9 +48,9 @@ const mockPosts = [
     imageAsset: 'assets/images/bg_post2.jpg',
     trackTitle: 'Unstoppable',
     trackArtist: 'Sia',
-    // Warm copper-champagne — lifted from the gold fabric + perfume glass.
-    moodA: Color(0xFFD9862E),
-    moodB: Color(0xFFF6DFA0),
+    // Muted teal into warm bronze — lifted from the fabric + perfume glass.
+    moodA: Color(0xFF14614F),
+    moodB: Color(0xFFA9713F),
     caption:
         '✨ Experience the elegance of Eclat Amour—a fragrance that captures '
         'the essence of romance and sophistication. Let every spritz wrap '
@@ -61,9 +61,9 @@ const mockPosts = [
     imageAsset: 'assets/images/bg_post3.jpg',
     trackTitle: 'Vogue',
     trackArtist: 'Madonna',
-    // Blush-lavender — lifted from the cake + flowers.
-    moodA: Color(0xFFE38DB8),
-    moodB: Color(0xFFB48CE0),
+    // Sage teal into muted plum — a cooler, non-pink counterpoint.
+    moodA: Color(0xFF2E7D6B),
+    moodB: Color(0xFF6B4A63),
     caption:
         'Unlock the power of bold, beautiful lashes! With WonderLash '
         'Mascara, get ultimate length, volume, and definition for a '
@@ -74,21 +74,47 @@ const mockPosts = [
 
 const sharePlatforms = [
   SharePlatform(
-      'Instagram', 'assets/icons/instagram.png', 'https://www.instagram.com'),
-  SharePlatform('Instagram Stories', 'assets/icons/instagram_story.png',
-      'https://www.instagram.com'),
+    'Instagram',
+    'assets/icons/instagram.png',
+    'https://www.instagram.com',
+  ),
   SharePlatform(
-      'Facebook', 'assets/icons/facebook.png', 'https://www.facebook.com'),
-  SharePlatform('Facebook Stories', 'assets/icons/facebook_story.png',
-      'https://www.facebook.com/stories'),
+    'Instagram Stories',
+    'assets/icons/instagram_story.png',
+    'https://www.instagram.com',
+  ),
   SharePlatform(
-      'Messenger', 'assets/icons/messenger.png', 'https://www.messenger.com'),
+    'Facebook',
+    'assets/icons/facebook.png',
+    'https://www.facebook.com',
+  ),
+  SharePlatform(
+    'Facebook Stories',
+    'assets/icons/facebook_story.png',
+    'https://www.facebook.com/stories',
+  ),
+  SharePlatform(
+    'Messenger',
+    'assets/icons/messenger.png',
+    'https://www.messenger.com',
+  ),
   SharePlatform('TikTok', 'assets/icons/tiktok.png', 'https://www.tiktok.com'),
   // Extended row (Frame 1244833074): list is horizontally scrollable.
-  SharePlatform('WhatsApp', 'assets/icons/whatsapp.png', 'https://wa.me/',
-      textParam: 'text'),
-  SharePlatform('WhatsApp Business', 'assets/icons/whatsapp_business.png',
-      'https://www.whatsapp.com'),
-  SharePlatform('Telegram', 'assets/icons/telegram.png',
-      'https://t.me/share/url?url=https://oriflame.com', textParam: 'text'),
+  SharePlatform(
+    'WhatsApp',
+    'assets/icons/whatsapp.png',
+    'https://wa.me/',
+    textParam: 'text',
+  ),
+  SharePlatform(
+    'WhatsApp Business',
+    'assets/icons/whatsapp_business.png',
+    'https://www.whatsapp.com',
+  ),
+  SharePlatform(
+    'Telegram',
+    'assets/icons/telegram.png',
+    'https://t.me/share/url?url=https://oriflame.com',
+    textParam: 'text',
+  ),
 ];

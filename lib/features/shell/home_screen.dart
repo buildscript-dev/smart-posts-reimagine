@@ -19,8 +19,10 @@ class HomeScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
         children: [
-          SectionHeading('Hi $consultantName 👋',
-              subtitle: "Here's how your sharing is going"),
+          SectionHeading(
+            'Hi $consultantName 👋',
+            subtitle: "Here's how your sharing is going",
+          ),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -33,16 +35,23 @@ class HomeScreen extends StatelessWidget {
                         ShaderMask(
                           shaderCallback: (r) =>
                               AppColors.heroGradient.createShader(r),
-                          child: Text(s.value,
-                              style: const TextStyle(
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white)),
+                          child: Text(
+                            s.value,
+                            style: const TextStyle(
+                              fontSize: 21,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 3),
-                        Text(s.label,
-                            style: const TextStyle(
-                                fontSize: 11.5, color: AppColors.greyText)),
+                        Text(
+                          s.label,
+                          style: const TextStyle(
+                            fontSize: 11.5,
+                            color: AppColors.greyText,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -60,8 +69,9 @@ class HomeScreen extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               clipBehavior: Clip.none,
               children: [
-                for (final item
-                    in searchCorpus.where((s) => s.kind == 'Product'))
+                for (final item in searchCorpus.where(
+                  (s) => s.kind == 'Product',
+                ))
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
                     child: SoftCard(
@@ -78,22 +88,32 @@ class HomeScreen extends StatelessWidget {
                                 gradient: AppColors.goldGradient,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.trending_up_rounded,
-                                  color: Colors.white, size: 15),
+                              child: const Icon(
+                                Icons.trending_up_rounded,
+                                color: Colors.white,
+                                size: 15,
+                              ),
                             ),
                             const Spacer(),
-                            Text(item.title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13,
-                                    color: AppColors.ink)),
-                            Text(item.subtitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 11, color: AppColors.greyText)),
+                            Text(
+                              item.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                                color: AppColors.ink,
+                              ),
+                            ),
+                            Text(
+                              item.subtitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.greyText,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -115,30 +135,43 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(Corners.sm),
-                      child: Image.asset(p.imageAsset,
-                          width: 54, height: 54, fit: BoxFit.cover),
+                      child: Image.asset(
+                        p.imageAsset,
+                        width: 54,
+                        height: 54,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(p.caption,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: ink)),
+                          Text(
+                            p.caption,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: ink,
+                            ),
+                          ),
                           const SizedBox(height: 2),
-                          Text('♫ ${p.trackTitle} · ${p.trackArtist}',
-                              style: const TextStyle(
-                                  fontSize: 12, color: AppColors.greyText)),
+                          Text(
+                            '♫ ${p.trackTitle} · ${p.trackArtist}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.greyText,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right_rounded,
-                        color: AppColors.greyMuted),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      color: AppColors.greyMuted,
+                    ),
                   ],
                 ),
               ),

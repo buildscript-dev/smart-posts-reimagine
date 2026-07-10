@@ -38,15 +38,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete photo?'),
-        content: const Text('This camera shot will be removed from your gallery.'),
+        content: const Text(
+          'This camera shot will be removed from your gallery.',
+        ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Delete',
-                  style: TextStyle(color: AppColors.brandGreen))),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.brandGreen),
+            ),
+          ),
         ],
       ),
     );
@@ -86,7 +92,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               borderRadius: BorderRadius.circular(Corners.lg),
               border: Border.all(
-                  color: AppColors.brandGreen.withValues(alpha: .12)),
+                color: AppColors.brandGreen.withValues(alpha: .12),
+              ),
             ),
             child: Column(
               children: [
@@ -100,8 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: const CircleAvatar(
                         radius: 32,
-                        backgroundImage:
-                            AssetImage('assets/images/avatar.png'),
+                        backgroundImage: AssetImage('assets/images/avatar.png'),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -109,20 +115,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(consultantName,
-                              style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w800,
-                                  color: ink)),
-                          Text(consultantSince,
-                              style: const TextStyle(
-                                  fontSize: 13, color: AppColors.greyText)),
+                          Text(
+                            consultantName,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: ink,
+                            ),
+                          ),
+                          Text(
+                            consultantSince,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.greyText,
+                            ),
+                          ),
                           const SizedBox(height: 3),
-                          Text('Referral: $referralCode',
-                              style: const TextStyle(
-                                  fontSize: 12.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.brandGreen)),
+                          Text(
+                            'Referral: $referralCode',
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.brandGreen,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -135,14 +151,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     for (final s in dashStats)
                       Column(
                         children: [
-                          Text(s.value,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: ink)),
-                          Text(s.label,
-                              style: const TextStyle(
-                                  fontSize: 11.5, color: AppColors.greyText)),
+                          Text(
+                            s.value,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: ink,
+                            ),
+                          ),
+                          Text(
+                            s.label,
+                            style: const TextStyle(
+                              fontSize: 11.5,
+                              color: AppColors.greyText,
+                            ),
+                          ),
                         ],
                       ),
                   ],
@@ -155,11 +178,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text('Dark mode',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: ink)),
+              title: Text(
+                'Dark mode',
+                style: TextStyle(fontWeight: FontWeight.w600, color: ink),
+              ),
               secondary: Icon(
-                  dark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
-                  color: AppColors.brandGreen),
+                dark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                color: AppColors.brandGreen,
+              ),
               activeThumbColor: AppColors.brandGreen,
               value: dark,
               onChanged: (_) {
@@ -172,8 +198,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const KickerLabel('Gallery'),
           const SizedBox(height: 4),
           const Text(
-              'Camera shots land here automatically — long-press or tap × to delete',
-              style: TextStyle(fontSize: 12, color: AppColors.greyText)),
+            'Camera shots land here automatically — long-press or tap × to delete',
+            style: TextStyle(fontSize: 12, color: AppColors.greyText),
+          ),
           const SizedBox(height: 12),
           GridView.builder(
             shrinkWrap: true,
@@ -187,10 +214,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             itemBuilder: (context, i) {
               final (image, file) = tiles[i];
               return GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => _PhotoViewer(image: image))),
-                onLongPress:
-                    file == null ? null : () => _confirmDelete(file),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => _PhotoViewer(image: image)),
+                ),
+                onLongPress: file == null ? null : () => _confirmDelete(file),
                 child: Stack(
                   children: [
                     Container(
@@ -198,9 +225,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(Corners.sm),
                         boxShadow: const [
                           BoxShadow(
-                              color: AppColors.cardShadow,
-                              blurRadius: 8,
-                              offset: Offset(0, 3)),
+                            color: AppColors.cardShadow,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          ),
                         ],
                       ),
                       child: ClipRRect(
@@ -222,8 +250,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.black45,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.close_rounded,
-                                color: Colors.white, size: 14),
+                            child: const Icon(
+                              Icons.close_rounded,
+                              color: Colors.white,
+                              size: 14,
+                            ),
                           ),
                         ),
                       ),

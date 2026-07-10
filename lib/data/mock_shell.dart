@@ -19,9 +19,13 @@ const dashStats = [
 ];
 
 class ChatThread {
-  ChatThread(this.name, this.lastMessage, this.time,
-      {this.unread = false, List<(bool, String)>? messages})
-      : messages = messages ?? [];
+  ChatThread(
+    this.name,
+    this.lastMessage,
+    this.time, {
+    this.unread = false,
+    List<(bool, String)>? messages,
+  }) : messages = messages ?? [];
   final String name;
   final String lastMessage;
   final String time;
@@ -32,27 +36,39 @@ class ChatThread {
 }
 
 final chatThreads = [
-  ChatThread('Oriflame Community', 'New Smart Posts are live! 🎉', '21:04',
-      unread: true,
-      messages: [
-        (false, 'Welcome to the community, Amanda! 💚'),
-        (false, 'New Smart Posts are live! 🎉'),
-      ]),
-  ChatThread('Priya S.', 'That lipstick post converted 🔥', '19:48',
-      unread: true,
-      messages: [
-        (false, 'Hey! Which caption did you use?'),
-        (true, 'The AI one, barely edited it 😄'),
-        (false, 'That lipstick post converted 🔥'),
-      ]),
-  ChatThread('Maria K.', 'Can you share your referral setup?', 'Tue',
-      messages: [
-        (false, 'Can you share your referral setup?'),
-      ]),
-  ChatThread('Oriflame Support', 'Your July commission is confirmed.', 'Mon',
-      messages: [
-        (false, 'Your July commission is confirmed.'),
-      ]),
+  ChatThread(
+    'Oriflame Community',
+    'New Smart Posts are live! 🎉',
+    '21:04',
+    unread: true,
+    messages: [
+      (false, 'Welcome to the community, Amanda! 💚'),
+      (false, 'New Smart Posts are live! 🎉'),
+    ],
+  ),
+  ChatThread(
+    'Priya S.',
+    'That lipstick post converted 🔥',
+    '19:48',
+    unread: true,
+    messages: [
+      (false, 'Hey! Which caption did you use?'),
+      (true, 'The AI one, barely edited it 😄'),
+      (false, 'That lipstick post converted 🔥'),
+    ],
+  ),
+  ChatThread(
+    'Maria K.',
+    'Can you share your referral setup?',
+    'Tue',
+    messages: [(false, 'Can you share your referral setup?')],
+  ),
+  ChatThread(
+    'Oriflame Support',
+    'Your July commission is confirmed.',
+    'Mon',
+    messages: [(false, 'Your July commission is confirmed.')],
+  ),
 ];
 
 class SearchItem {

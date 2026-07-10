@@ -8,11 +8,14 @@ import '../../data/models.dart';
 /// universal fallback.
 Future<void> launchPlatform(SharePlatform platform, {String? text}) async {
   final uri = Uri.parse(platform.shareUrl(text));
-  final openedApp = await launchUrl(uri,
-          mode: LaunchMode.externalNonBrowserApplication)
-      .catchError((_) => false);
+  final openedApp = await launchUrl(
+    uri,
+    mode: LaunchMode.externalNonBrowserApplication,
+  ).catchError((_) => false);
   if (!openedApp) {
-    await launchUrl(uri, mode: LaunchMode.externalApplication)
-        .catchError((_) => false);
+    await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    ).catchError((_) => false);
   }
 }

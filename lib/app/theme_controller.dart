@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 final themeMode = ValueNotifier<ThemeMode>(ThemeMode.light);
 
 void toggleTheme() {
-  themeMode.value =
-      themeMode.value == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+  themeMode.value = themeMode.value == ThemeMode.light
+      ? ThemeMode.dark
+      : ThemeMode.light;
 }

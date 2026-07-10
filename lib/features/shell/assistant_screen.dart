@@ -16,8 +16,11 @@ class AssistantScreen extends StatefulWidget {
 class _AssistantScreenState extends State<AssistantScreen> {
   final _input = TextEditingController();
   final _messages = <(bool, String)>[
-    (false, 'Hi $consultantName! I\'m your Oriflame assistant. Ask me about '
-        'captions, sharing, sales, or what\'s trending. ✨'),
+    (
+      false,
+      'Hi $consultantName! I\'m your Oriflame assistant. Ask me about '
+          'captions, sharing, sales, or what\'s trending. ✨',
+    ),
   ];
 
   void _send() {
@@ -57,11 +60,14 @@ class _AssistantScreenState extends State<AssistantScreen> {
                 gradient: AppColors.heroGradient,
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Text('AI',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800)),
+              child: const Text(
+                'AI',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ),
             const SizedBox(width: 8),
             Text('Your Assistant', style: TextStyle(color: ink)),
@@ -76,34 +82,43 @@ class _AssistantScreenState extends State<AssistantScreen> {
               children: [
                 for (final (fromMe, text) in _messages)
                   Align(
-                    alignment:
-                        fromMe ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: fromMe
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 11),
+                        horizontal: 15,
+                        vertical: 11,
+                      ),
                       constraints: const BoxConstraints(maxWidth: 300),
                       decoration: BoxDecoration(
                         gradient: fromMe ? AppColors.heroGradient : null,
                         color: fromMe
                             ? null
-                            : (dark ? AppColors.darkCard : AppColors.surfaceCard),
+                            : (dark
+                                  ? AppColors.darkCard
+                                  : AppColors.surfaceCard),
                         borderRadius: BorderRadius.circular(18),
                         boxShadow: const [
                           BoxShadow(
-                              color: AppColors.cardShadow,
-                              blurRadius: 12,
-                              offset: Offset(0, 3)),
+                            color: AppColors.cardShadow,
+                            blurRadius: 12,
+                            offset: Offset(0, 3),
+                          ),
                         ],
                       ),
-                      child: Text(text,
-                          style: TextStyle(
-                              height: 1.35,
-                              color: fromMe
-                                  ? Colors.white
-                                  : dark
-                                      ? Colors.white
-                                      : AppColors.ink)),
+                      child: Text(
+                        text,
+                        style: TextStyle(
+                          height: 1.35,
+                          color: fromMe
+                              ? Colors.white
+                              : dark
+                              ? Colors.white
+                              : AppColors.ink,
+                        ),
+                      ),
                     ),
                   ),
               ],
@@ -125,7 +140,9 @@ class _AssistantScreenState extends State<AssistantScreen> {
                           hintText: 'Ask your assistant…',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 18, vertical: 12),
+                            horizontal: 18,
+                            vertical: 12,
+                          ),
                         ),
                       ),
                     ),
@@ -171,8 +188,9 @@ class _SendButtonState extends State<_SendButton> {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                  color: AppColors.brandGreen.withValues(alpha: .4),
-                  blurRadius: 10),
+                color: AppColors.brandGreen.withValues(alpha: .4),
+                blurRadius: 10,
+              ),
             ],
           ),
           child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
