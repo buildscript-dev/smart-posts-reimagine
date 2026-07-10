@@ -39,6 +39,11 @@ abstract class AppColors {
   static const goldGradient = LinearGradient(colors: [gold, Color(0xFF8C5A30)]);
 
   static const cardShadow = Color(0x1F07463A); // tinted, not flat black
+
+  // Soft neomorphic highlight — paired with cardShadow for a raised,
+  // dual-tone card edge instead of a flat single drop shadow.
+  static const cardHighlightLight = Color(0x99FFFFFF);
+  static const cardHighlightDark = Color(0x0DFFFFFF);
 }
 
 /// Shared motion tokens so every animated widget feels like one system.

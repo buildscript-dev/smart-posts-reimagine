@@ -46,11 +46,18 @@ class _SoftCardState extends State<SoftCard> {
         decoration: BoxDecoration(
           color: resolvedColor,
           borderRadius: BorderRadius.circular(widget.radius),
-          boxShadow: const [
-            BoxShadow(
+          boxShadow: [
+            const BoxShadow(
               color: AppColors.cardShadow,
               blurRadius: 18,
               offset: Offset(0, 6),
+            ),
+            BoxShadow(
+              color: dark
+                  ? AppColors.cardHighlightDark
+                  : AppColors.cardHighlightLight,
+              blurRadius: 12,
+              offset: const Offset(-3, -4),
             ),
           ],
         ),
@@ -128,6 +135,11 @@ class _AppButtonState extends State<AppButton> {
                       color: AppColors.brandGreen.withValues(alpha: .35),
                       blurRadius: 14,
                       offset: const Offset(0, 5),
+                    ),
+                    const BoxShadow(
+                      color: AppColors.cardHighlightLight,
+                      blurRadius: 10,
+                      offset: Offset(-2, -3),
                     ),
                   ]
                 : null,
