@@ -35,7 +35,9 @@ abstract class AppColors {
   static const scrim = Colors.black26;
   static const gold = Color(0xFFB97A45); // warm copper/bronze accent
 
-  static const heroGradient = LinearGradient(colors: [brandGreen, deepGreen]);
+  // Same green→gold pairing as the community/camera/search avatar washes,
+  // at full strength — replaces the old dark green→deepGreen fill.
+  static const heroGradient = LinearGradient(colors: [brandGreen, gold]);
   static const goldGradient = LinearGradient(colors: [gold, Color(0xFF8C5A30)]);
 
   static const cardShadow = Color(0x1F07463A); // tinted, not flat black

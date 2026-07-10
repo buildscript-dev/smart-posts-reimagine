@@ -81,7 +81,9 @@ void _showShareSheet(BuildContext context, int index) {
     ),
     builder: (sheetContext) => StatefulBuilder(
       builder: (sheetContext, setSheetState) => SafeArea(
-        child: Padding(
+        // Scrolls if the grid + link row exceed the sheet's max height on
+        // short screens — prevents bottom overflow.
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
