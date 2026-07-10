@@ -9,7 +9,6 @@ import '../../data/gallery_store.dart';
 import '../../data/mock_posts.dart';
 import '../../data/mock_shell.dart';
 import '../../shared/ui_kit.dart';
-import '../smart_post/post_card_experiment.dart';
 import 'shell.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -271,31 +270,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
           ),
-          const SizedBox(height: 10),
-          SoftCard(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.science_rounded, color: AppColors.gold),
-              title: Text(
-                'New post card (experiment)',
-                style: TextStyle(fontWeight: FontWeight.w600, color: ink),
-              ),
-              subtitle: const Text(
-                "Try the alternate style — doesn't change your feed",
-                style: TextStyle(fontSize: 12),
-              ),
-              trailing: const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.greyMuted,
-              ),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const PostCardExperimentScreen(),
-                ),
-              ),
-            ),
-          ),
           const SizedBox(height: 24),
           const KickerLabel('Gallery'),
           const SizedBox(height: 4),
@@ -331,6 +305,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
                 onLongPress: file == null ? null : () => _confirmDelete(file),
                 child: Stack(
+                  // Stack defaults to StackFit.loose, which lets this
+                  // non-positioned Container shrink to the Image's own
+                  // intrinsic aspect ratio instead of the grid cell's square
+                  // bounds — that's what made every tile preview at a
+                  // different size. Expand forces it to fill the cell.
+                  fit: StackFit.expand,
                   children: [
                     Container(
                       decoration: BoxDecoration(
@@ -398,6 +378,8 @@ class _PhotoViewerState extends State<_PhotoViewer> {
   double? _aspectRatio;
   late final ImageStreamListener _listener;
   ImageStream? _stream;
+  final _transformController = TransformationController();
+  TapDownDetails? _doubleTapDetails;
 
   @override
   void initState() {
@@ -414,7 +396,20 @@ class _PhotoViewerState extends State<_PhotoViewer> {
   @override
   void dispose() {
     _stream?.removeListener(_listener);
+    _transformController.dispose();
     super.dispose();
+  }
+
+  void _onDoubleTap() {
+    HapticFeedback.lightImpact();
+    if (_transformController.value != Matrix4.identity()) {
+      _transformController.value = Matrix4.identity();
+      return;
+    }
+    final pos = _doubleTapDetails!.localPosition;
+    _transformController.value = Matrix4.identity()
+      ..translateByDouble(-pos.dx * 1.5, -pos.dy * 1.5, 0, 1)
+      ..scaleByDouble(2.5, 2.5, 2.5, 1);
   }
 
   @override
@@ -429,12 +424,18 @@ class _PhotoViewerState extends State<_PhotoViewer> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
+          // No tap-to-dismiss here — it used to swallow the very first tap
+          // of a double-tap-to-zoom gesture and pop the viewer before the
+          // zoom could register. Closing is via the X button only now.
           GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
+            onDoubleTapDown: (d) => _doubleTapDetails = d,
+            onDoubleTap: _onDoubleTap,
             child: Center(
               child: Hero(
                 tag: widget.heroTag,
                 child: InteractiveViewer(
+                  transformationController: _transformController,
+                  maxScale: 4,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: isWide ? size.width * 0.75 : size.width,
