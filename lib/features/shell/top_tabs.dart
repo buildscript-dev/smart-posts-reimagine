@@ -133,7 +133,7 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
     ),
   ];
 
-  late final _earnController = PageController(viewportFraction: 0.9);
+  late final _earnController = PageController();
   int _earnPage = 0;
   bool _topStarred = true;
 
@@ -215,14 +215,11 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
               onPageChanged: (i) => setState(() => _earnPage = i),
               itemBuilder: (context, i) {
                 final (headline, big, earned, earnedLabel) = _earnCards[i];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: _EarnCard(
-                    headline: headline,
-                    big: big,
-                    earned: earned,
-                    earnedLabel: earnedLabel,
-                  ),
+                return _EarnCard(
+                  headline: headline,
+                  big: big,
+                  earned: earned,
+                  earnedLabel: earnedLabel,
                 );
               },
             ),
