@@ -15,9 +15,6 @@ class LibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ink = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white
-        : AppColors.ink;
     return ShellScaffold(
       index: -1,
       topTabIndex: 1,
@@ -43,49 +40,91 @@ class LibraryScreen extends StatelessWidget {
               final p = mockPosts[i];
               return Reveal(
                 index: i,
-                child: SoftCard(
-                  padding: const EdgeInsets.all(8),
+                child: GestureDetector(
                   onTap: () => Navigator.of(context).popUntil((r) => r.isFirst),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(Corners.sm),
-                          child: Image.asset(
-                            p.imageAsset,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Corners.lg),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: AppColors.cardShadow,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(Corners.lg),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.asset(p.imageAsset, fit: BoxFit.cover),
+                          // Bottom scrim so the caption reads over any photo,
+                          // letting the image fill the whole card instead of
+                          // being squeezed by a separate text row below it.
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.5, 1],
+                                colors: [
+                                  Colors.black.withValues(alpha: 0),
+                                  Colors.black.withValues(alpha: .65),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              p.caption,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: ink,
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: .35),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.bookmark_rounded,
+                                color: Colors.white,
+                                size: 14,
                               ),
                             ),
-                            Text(
-                              '♫ ${p.trackTitle}',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: AppColors.greyText,
-                              ),
+                          ),
+                          Positioned(
+                            left: 10,
+                            right: 10,
+                            bottom: 10,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p.caption,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    height: 1.25,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '♫ ${p.trackTitle}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.white.withValues(alpha: .8),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               );
