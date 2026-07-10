@@ -14,10 +14,13 @@ final editedCaptions = <int, String>{};
 /// Liked state — session-local, no backend.
 final likedPosts = <int>{};
 
-/// Per-post image focus point and zoom for the experimental card style's
-/// crop editor — session-local, defaults to centered / no zoom.
-final imageFocus = <int, Alignment>{};
-final imageZoom = <int, double>{};
+/// Per-post, per-card-size image focus point and zoom for the crop editor —
+/// session-local, defaults to centered / no zoom. Key via [cropKey] so the
+/// small card and the full-size view keep independent crops.
+final imageFocus = <String, Alignment>{};
+final imageZoom = <String, double>{};
+
+String cropKey(int index, bool full) => '$index-${full ? 'full' : 'small'}';
 
 /// Full caption text for a post: the edit or the generated default.
 String captionTextFor(int index) =>
@@ -42,10 +45,20 @@ const mockPosts = [
         "enjoying a long-lasting, luminous matte colour. 💋✨ "
         "#Oriflame #GiordaniGold #LipCareGoals",
     product: Product(
-      name: 'Girodani Gold Lipstick',
+      name: 'Giordani Gold - Eternal Glow Lipstick SPF 25',
       price: '\$14.99',
       discount: '30% off',
       thumbAsset: 'assets/images/product_thumb.png',
+      about:
+          'A luxurious creamy lipstick with rich, luminous matte colour '
+          'that cares for your lips while you wear it.',
+      benefits: [
+        'SPF 25 sun protection',
+        'Hyaluronic acid keeps lips hydrated',
+        'Collagen-boosting peptides',
+        'Long-lasting luminous matte finish',
+      ],
+      buyUrl: 'https://www.oriflame.com',
     ),
   ),
   SmartPost(

@@ -247,9 +247,12 @@ class _MusicRowState extends State<MusicRow>
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final ink = dark ? Colors.white : AppColors.ink;
+    final accent = dark ? AppColors.gold : AppColors.pillPink;
     return FrostedPanel(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-      color: Colors.black.withValues(alpha: 0.11),
+      color: Colors.transparent,
       child: Row(
         children: [
           AnimatedBuilder(
@@ -258,29 +261,21 @@ class _MusicRowState extends State<MusicRow>
               angle: (_bob.value - 0.5) * 0.35,
               child: child,
             ),
-            child: const Icon(
-              Icons.music_note_rounded,
-              color: AppColors.gold,
-              size: 19,
-            ),
+            child: Icon(Icons.music_note_rounded, color: accent, size: 19),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text.rich(
               TextSpan(
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  shadows: overlayTextShadows,
-                ),
+                style: TextStyle(color: ink, fontSize: 14),
                 children: [
                   const TextSpan(text: 'Recommended:  '),
                   TextSpan(
                     text: widget.post.trackTitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.italic,
-                      color: AppColors.gold,
+                      color: accent,
                     ),
                   ),
                   TextSpan(text: ' by ${widget.post.trackArtist}'),
@@ -463,11 +458,13 @@ class _CaptionBlockState extends State<CaptionBlock>
 
   @override
   Widget build(BuildContext context) {
-    const italic = TextStyle(
-      color: Colors.white,
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final ink = dark ? Colors.white : AppColors.ink;
+    final accent = dark ? AppColors.gold : AppColors.pillPink;
+    final italic = TextStyle(
+      color: ink,
       fontSize: 13.5,
       fontStyle: FontStyle.italic,
-      shadows: overlayTextShadows,
     );
     final edited = editedCaptions[widget.index];
     final body = edited ?? widget.post.caption;
@@ -481,7 +478,7 @@ class _CaptionBlockState extends State<CaptionBlock>
         scale: _pressed ? 0.985 : 1.0,
         duration: Motion.fast,
         child: FrostedPanel(
-          color: Colors.black.withValues(alpha: 0.13),
+          color: Colors.transparent,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -509,32 +506,26 @@ class _CaptionBlockState extends State<CaptionBlock>
                       'CAPTION SUGGESTION',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: ink,
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.4,
-                        shadows: overlayTextShadows,
                       ),
                     ),
                   ),
                   const Spacer(),
-                  const Icon(
-                    Icons.auto_fix_high_rounded,
-                    color: AppColors.gold,
-                    size: 16,
-                  ),
+                  Icon(Icons.auto_fix_high_rounded, color: accent, size: 16),
                   const SizedBox(width: 5),
                   Flexible(
                     child: Text(
                       'Edit Caption',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: ink,
                         fontSize: 13.5,
                         fontWeight: FontWeight.w700,
-                        shadows: overlayTextShadows,
                       ),
                     ),
                   ),
@@ -562,11 +553,10 @@ class _CaptionBlockState extends State<CaptionBlock>
                           : const NeverScrollableScrollPhysics(),
                       child: Text.rich(
                         TextSpan(
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: ink,
                             fontSize: 14,
                             height: 1.35,
-                            shadows: overlayTextShadows,
                           ),
                           children: [
                             TextSpan(
@@ -575,11 +565,11 @@ class _CaptionBlockState extends State<CaptionBlock>
                                   : '${body.substring(0, body.length < 64 ? body.length : 64)}... ',
                             ),
                             if (!expanded)
-                              const TextSpan(
+                              TextSpan(
                                 text: 'see more',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
-                                  color: AppColors.gold,
+                                  color: accent,
                                   decoration: TextDecoration.underline,
                                 ),
                               ),

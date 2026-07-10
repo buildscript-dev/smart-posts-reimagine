@@ -6,12 +6,20 @@ class Product {
     required this.price,
     required this.discount,
     required this.thumbAsset,
+    this.about = '',
+    this.benefits = const [],
+    this.buyUrl = '',
   });
 
   final String name;
   final String price;
   final String discount;
   final String thumbAsset;
+
+  /// What the ad is about — short marketing blurb for the ad details sheet.
+  final String about;
+  final List<String> benefits;
+  final String buyUrl;
 }
 
 class SmartPost {

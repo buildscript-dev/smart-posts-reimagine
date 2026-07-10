@@ -35,39 +35,25 @@ class _AppBottomNavState extends State<AppBottomNav> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              for (var i = 0; i < AppBottomNav.icons.length; i++)
-                _NavIcon(
-                  icon: AppBottomNav.icons[i],
-                  active: widget.activeIndex == i,
-                  pressed: _pressed == i,
-                  color: widget.color,
-                  onTapDown: () => setState(() => _pressed = i),
-                  onTapUp: () => setState(() => _pressed = null),
-                  onTap: widget.onTap == null
-                      ? null
-                      : () {
-                          HapticFeedback.mediumImpact();
-                          widget.onTap!(i);
-                        },
-                ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Container(
-            width: 120,
-            height: 4,
-            decoration: BoxDecoration(
-              color: widget.color.withValues(alpha: .8),
-              borderRadius: BorderRadius.circular(3),
+          for (var i = 0; i < AppBottomNav.icons.length; i++)
+            _NavIcon(
+              icon: AppBottomNav.icons[i],
+              active: widget.activeIndex == i,
+              pressed: _pressed == i,
+              color: widget.color,
+              onTapDown: () => setState(() => _pressed = i),
+              onTapUp: () => setState(() => _pressed = null),
+              onTap: widget.onTap == null
+                  ? null
+                  : () {
+                      HapticFeedback.mediumImpact();
+                      widget.onTap!(i);
+                    },
             ),
-          ),
         ],
       ),
     );

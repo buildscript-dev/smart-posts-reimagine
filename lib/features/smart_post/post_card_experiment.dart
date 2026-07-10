@@ -600,12 +600,11 @@ void _openExpanded(BuildContext context, int index) {
     PageRouteBuilder(
       transitionDuration: Motion.slow,
       reverseTransitionDuration: Motion.slow,
+      // Fade, not slide: the Hero flies the photo small→full in place, so
+      // the image never visibly changes position.
       pageBuilder: (_, _, _) => _ExpandedPostView(initialIndex: index),
-      transitionsBuilder: (_, anim, _, child) => SlideTransition(
-        position: Tween(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
-        ).animate(CurvedAnimation(parent: anim, curve: Motion.smooth)),
+      transitionsBuilder: (_, anim, _, child) => FadeTransition(
+        opacity: CurvedAnimation(parent: anim, curve: Motion.smooth),
         child: child,
       ),
     ),
@@ -1025,22 +1024,28 @@ class _ExperimentPostCardState extends State<ExperimentPostCard> {
             Expanded(
               child: GestureDetector(
                 onTap: () => _openExpanded(context, widget.index),
-                child: _PostImage(
-                  post: post,
-                  index: widget.index,
-                  aspectRatio: null,
-                  showAd: _showAd,
+                child: Hero(
+                  tag: 'post-image-${widget.index}',
+                  child: _PostImage(
+                    post: post,
+                    index: widget.index,
+                    aspectRatio: null,
+                    showAd: _showAd,
+                  ),
                 ),
               ),
             )
           else
             GestureDetector(
               onTap: () => _openExpanded(context, widget.index),
-              child: _PostImage(
-                post: post,
-                index: widget.index,
-                aspectRatio: 0.82,
-                showAd: _showAd,
+              child: Hero(
+                tag: 'post-image-${widget.index}',
+                child: _PostImage(
+                  post: post,
+                  index: widget.index,
+                  aspectRatio: 0.82,
+                  showAd: _showAd,
+                ),
               ),
             ),
           const SizedBox(height: 14),
@@ -1236,12 +1241,15 @@ class _ExpandedPostPageState extends State<_ExpandedPostPage> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            _PostImage(
-              post: post,
-              index: widget.index,
-              aspectRatio: null,
-              showAd: false,
-              full: true,
+            Hero(
+              tag: 'post-image-${widget.index}',
+              child: _PostImage(
+                post: post,
+                index: widget.index,
+                aspectRatio: null,
+                showAd: false,
+                full: true,
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

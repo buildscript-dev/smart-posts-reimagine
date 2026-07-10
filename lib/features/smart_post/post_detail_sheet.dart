@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../app/theme.dart';
-import '../../data/mock_posts.dart';
 import '../../data/models.dart';
 import 'widgets/post_overlays.dart';
 
-/// The full post — caption, music, product, share — lives here instead of
-/// permanently on the photo. Drag up for more, drag down to dismiss; the
-/// photo stays fully visible until the reader actually wants this.
+/// The full post — caption and music — lives here instead of permanently on
+/// the photo. Drag up for more, drag down to dismiss; the photo stays fully
+/// visible until the reader actually wants this.
 Future<void> showPostDetailSheet(
   BuildContext context, {
   required SmartPost post,
   required int index,
   required VoidCallback onEditCaption,
-  required void Function(SharePlatform) onShare,
 }) {
   HapticFeedback.lightImpact();
   return showModalBottomSheet(
@@ -76,13 +74,9 @@ Future<void> showPostDetailSheet(
                   controller: scrollController,
                   padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
                   children: [
-                    _DarkPanel(
-                      mood: post.moodA,
-                      child: MusicRow(post: post),
-                    ),
+                    _GlassPanel(child: MusicRow(post: post)),
                     const SizedBox(height: 12),
-                    _DarkPanel(
-                      mood: post.moodA,
+                    _GlassPanel(
                       child: CaptionBlock(
                         post: post,
                         index: index,
@@ -92,47 +86,6 @@ Future<void> showPostDetailSheet(
                         },
                         alwaysExpanded: true,
                       ),
-                    ),
-                    if (post.product != null) ...[
-                      const SizedBox(height: 12),
-                      _DarkPanel(
-                        mood: post.moodA,
-                        child: ProductCard(
-                          product: post.product!,
-                          trending: true,
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Quick share to',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.greyText,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 16,
-                      runSpacing: 12,
-                      children: [
-                        for (final p in sharePlatforms)
-                          GestureDetector(
-                            onTap: () {
-                              HapticFeedback.mediumImpact();
-                              Navigator.of(context).pop();
-                              onShare(p);
-                            },
-                            child: Image.asset(
-                              p.iconAsset,
-                              width: 44,
-                              height: 44,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                      ],
                     ),
                   ],
                 ),
@@ -145,23 +98,30 @@ Future<void> showPostDetailSheet(
   );
 }
 
-/// Dark rounded panel so the light-mode overlay widgets (built for a photo
-/// background) read correctly on the sheet's white surface, tinted with the
-/// post's own mood color instead of flat black.
-class _DarkPanel extends StatelessWidget {
-  const _DarkPanel({required this.child, required this.mood});
+/// Same soft brand gradient wash as the Communities earn cards — one shared
+/// "glass" look across the app's info surfaces.
+class _GlassPanel extends StatelessWidget {
+  const _GlassPanel({required this.child});
 
   final Widget child;
-  final Color mood;
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Color.lerp(mood, Colors.black, 0.55),
-        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.brandGreen.withValues(alpha: dark ? .22 : .14),
+            AppColors.gold.withValues(alpha: dark ? .16 : .10),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.brandGreen.withValues(alpha: .14)),
       ),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(8),
       child: child,
     );
   }
