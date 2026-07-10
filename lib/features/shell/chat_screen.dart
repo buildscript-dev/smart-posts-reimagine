@@ -163,32 +163,35 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
                     alignment: fromMe
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 11,
-                      ),
-                      constraints: const BoxConstraints(maxWidth: 280),
-                      decoration: BoxDecoration(
-                        gradient: fromMe ? AppColors.heroGradient : null,
-                        color: fromMe
-                            ? null
-                            : (dark
-                                  ? AppColors.darkCard
-                                  : AppColors.surfaceCard),
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: AppColors.cardShadow,
-                            blurRadius: 12,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        text,
-                        style: TextStyle(color: fromMe ? Colors.white : ink),
+                    child: _BubbleIn(
+                      alignEnd: fromMe,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 11,
+                        ),
+                        constraints: const BoxConstraints(maxWidth: 280),
+                        decoration: BoxDecoration(
+                          gradient: fromMe ? AppColors.heroGradient : null,
+                          color: fromMe
+                              ? null
+                              : (dark
+                                    ? AppColors.darkCard
+                                    : AppColors.surfaceCard),
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: AppColors.cardShadow,
+                              blurRadius: 12,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          text,
+                          style: TextStyle(color: fromMe ? Colors.white : ink),
+                        ),
                       ),
                     ),
                   ),
@@ -267,6 +270,49 @@ class _SendButtonState extends State<_SendButton> {
           child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
         ),
       ),
+    );
+  }
+}
+
+/// One-shot pop-in for a message bubble — only the newly-mounted last
+/// bubble ever plays this (existing bubbles keep their State, so they
+/// don't replay it on every rebuild when a new message is appended).
+class _BubbleIn extends StatefulWidget {
+  const _BubbleIn({required this.child, required this.alignEnd});
+
+  final Widget child;
+  final bool alignEnd;
+
+  @override
+  State<_BubbleIn> createState() => _BubbleInState();
+}
+
+class _BubbleInState extends State<_BubbleIn>
+    with SingleTickerProviderStateMixin {
+  late final _c = AnimationController(vsync: this, duration: Motion.base)
+    ..forward();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (context, child) => Opacity(
+        opacity: _c.value,
+        child: Transform.scale(
+          scale: 0.85 + (0.15 * _c.value),
+          alignment: widget.alignEnd
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          child: child,
+        ),
+      ),
+      child: widget.child,
     );
   }
 }

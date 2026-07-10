@@ -94,6 +94,11 @@ class HomeScreen extends StatelessWidget {
                     child: SoftCard(
                       color: AppColors.cream,
                       padding: const EdgeInsets.all(14),
+                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${item.title} · ${item.subtitle}'),
+                        ),
+                      ),
                       child: SizedBox(
                         width: 128,
                         child: Column(
