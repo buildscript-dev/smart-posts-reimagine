@@ -854,10 +854,29 @@ class _CommunityStack extends StatefulWidget {
 
 class _CommunityStackState extends State<_CommunityStack> {
   bool _expanded = false;
+  bool _collapsing = false;
+
+  static const _stagger = Duration(milliseconds: 45);
+  static const _rowDuration = Duration(milliseconds: 340);
 
   void _toggle() {
-    HapticFeedback.mediumImpact();
-    setState(() => _expanded = !_expanded);
+    HapticFeedback.lightImpact();
+    if (_expanded) {
+      // Bottom-first exit (mirrors Apple's stack restacking): let each row
+      // play its reverse animation, then flip back to the collapsed view.
+      setState(() => _collapsing = true);
+      final total =
+          _stagger * (widget.items.length - 1) + _rowDuration + _stagger;
+      Future.delayed(total, () {
+        if (!mounted) return;
+        setState(() {
+          _expanded = false;
+          _collapsing = false;
+        });
+      });
+    } else {
+      setState(() => _expanded = true);
+    }
   }
 
   @override
@@ -865,41 +884,47 @@ class _CommunityStackState extends State<_CommunityStack> {
     final ink = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
         : AppColors.ink;
-    if (_expanded) {
+    if (_expanded || _collapsing) {
       return Column(
         children: [
           for (var i = 0; i < widget.items.length; i++)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: Reveal(
-                index: i,
+              child: _StackRow(
+                enterDelay: _stagger * i,
+                exitDelay: _stagger * (widget.items.length - 1 - i),
+                collapsing: _collapsing,
                 child: _CommunityRow(
                   item: widget.items[i],
                   onToggleJoin: () => widget.onToggleJoin(i),
                 ),
               ),
             ),
-          GestureDetector(
-            onTap: _toggle,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Show less',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
+          AnimatedOpacity(
+            opacity: _collapsing ? 0 : 1,
+            duration: _rowDuration,
+            child: GestureDetector(
+              onTap: _toggle,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Show less',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: ink.withValues(alpha: .6),
+                      ),
+                    ),
+                    Icon(
+                      Icons.expand_less_rounded,
+                      size: 18,
                       color: ink.withValues(alpha: .6),
                     ),
-                  ),
-                  Icon(
-                    Icons.expand_less_rounded,
-                    size: 18,
-                    color: ink.withValues(alpha: .6),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -1011,6 +1036,82 @@ class _CommunityStackState extends State<_CommunityStack> {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Plays a spring-ish rise+fade on mount (stack expand), and — if told to
+/// collapse — the same motion in reverse before the parent restacks.
+/// Delays are pre-computed by the parent so rows cascade top-first on the
+/// way in and bottom-first on the way out, like the lock-screen stack.
+class _StackRow extends StatefulWidget {
+  const _StackRow({
+    required this.enterDelay,
+    required this.exitDelay,
+    required this.collapsing,
+    required this.child,
+  });
+
+  final Duration enterDelay;
+  final Duration exitDelay;
+  final bool collapsing;
+  final Widget child;
+
+  @override
+  State<_StackRow> createState() => _StackRowState();
+}
+
+class _StackRowState extends State<_StackRow>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 340),
+  );
+  late final _curve = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeOutBack,
+    reverseCurve: Curves.easeIn,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(widget.enterDelay, () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant _StackRow old) {
+    super.didUpdateWidget(old);
+    if (widget.collapsing && !old.collapsing) {
+      Future.delayed(widget.exitDelay, () {
+        if (mounted) _controller.reverse();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _curve,
+      builder: (context, child) {
+        final settled = _curve.value.clamp(0.0, 1.0);
+        return Opacity(
+          opacity: settled,
+          child: Transform.translate(
+            offset: Offset(0, (1 - _curve.value) * 18),
+            child: Transform.scale(scale: 0.92 + 0.08 * settled, child: child),
+          ),
+        );
+      },
+      child: widget.child,
     );
   }
 }
