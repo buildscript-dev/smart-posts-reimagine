@@ -40,10 +40,12 @@ class _AssistantScreenState extends State<AssistantScreen> {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
+    final bg = dark ? AppColors.darkBg : AppColors.surface;
+    final ink = dark ? Colors.white : AppColors.ink;
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: bg,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: bg,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Row(
@@ -62,7 +64,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
                       fontWeight: FontWeight.w800)),
             ),
             const SizedBox(width: 8),
-            const Text('Your Assistant'),
+            Text('Your Assistant', style: TextStyle(color: ink)),
           ],
         ),
       ),
@@ -83,7 +85,9 @@ class _AssistantScreenState extends State<AssistantScreen> {
                       constraints: const BoxConstraints(maxWidth: 300),
                       decoration: BoxDecoration(
                         gradient: fromMe ? AppColors.heroGradient : null,
-                        color: fromMe ? null : AppColors.surfaceCard,
+                        color: fromMe
+                            ? null
+                            : (dark ? AppColors.darkCard : AppColors.surfaceCard),
                         borderRadius: BorderRadius.circular(18),
                         boxShadow: const [
                           BoxShadow(

@@ -32,13 +32,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (mounted) setState(() => _shots = shots);
   }
 
+  Future<void> _confirmDelete(File photo) async {
+    HapticFeedback.mediumImpact();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete photo?'),
+        content: const Text('This camera shot will be removed from your gallery.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Delete',
+                  style: TextStyle(color: AppColors.brandGreen))),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await GalleryStore.delete(photo);
+      HapticFeedback.lightImpact();
+      await _load();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final ink = dark ? Colors.white : AppColors.ink;
-    final tiles = <ImageProvider>[
-      for (final f in _shots) FileImage(f),
-      for (final p in mockPosts) AssetImage(p.imageAsset),
+    // Only camera shots are deletable — the 3 seed posts are app assets.
+    final tiles = <(ImageProvider, File?)>[
+      for (final f in _shots) (FileImage(f), f),
+      for (final p in mockPosts) (AssetImage(p.imageAsset), null),
     ];
     return ShellScaffold(
       index: tabProfile,
@@ -145,7 +171,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 24),
           const KickerLabel('Gallery'),
           const SizedBox(height: 4),
-          const Text('Camera shots land here automatically',
+          const Text(
+              'Camera shots land here automatically — long-press or tap × to delete',
               style: TextStyle(fontSize: 12, color: AppColors.greyText)),
           const SizedBox(height: 12),
           GridView.builder(
@@ -157,25 +184,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisSpacing: 8,
             ),
             itemCount: tiles.length,
-            itemBuilder: (context, i) => GestureDetector(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => _PhotoViewer(image: tiles[i]))),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Corners.sm),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: AppColors.cardShadow,
-                        blurRadius: 8,
-                        offset: Offset(0, 3)),
+            itemBuilder: (context, i) {
+              final (image, file) = tiles[i];
+              return GestureDetector(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => _PhotoViewer(image: image))),
+                onLongPress:
+                    file == null ? null : () => _confirmDelete(file),
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Corners.sm),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: AppColors.cardShadow,
+                              blurRadius: 8,
+                              offset: Offset(0, 3)),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(Corners.sm),
+                        child: Image(image: image, fit: BoxFit.cover),
+                      ),
+                    ),
+                    // Only camera shots show a delete affordance — the 3
+                    // seed posts are app assets, not user photos.
+                    if (file != null)
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: GestureDetector(
+                          onTap: () => _confirmDelete(file),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.black45,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.close_rounded,
+                                color: Colors.white, size: 14),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Corners.sm),
-                  child: Image(image: tiles[i], fit: BoxFit.cover),
-                ),
-              ),
-            ),
+              );
+            },
           ),
         ],
       ),

@@ -120,11 +120,14 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final ink = dark ? Colors.white : AppColors.ink;
+    final bg = dark ? AppColors.darkBg : AppColors.surface;
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: bg,
       appBar: AppBar(
-        title: Text(widget.thread.name),
-        backgroundColor: AppColors.surface,
+        title: Text(widget.thread.name, style: TextStyle(color: ink)),
+        backgroundColor: bg,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
@@ -145,7 +148,9 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
                       constraints: const BoxConstraints(maxWidth: 280),
                       decoration: BoxDecoration(
                         gradient: fromMe ? AppColors.heroGradient : null,
-                        color: fromMe ? null : AppColors.surfaceCard,
+                        color: fromMe
+                            ? null
+                            : (dark ? AppColors.darkCard : AppColors.surfaceCard),
                         borderRadius: BorderRadius.circular(18),
                         boxShadow: const [
                           BoxShadow(
@@ -155,9 +160,7 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
                         ],
                       ),
                       child: Text(text,
-                          style: TextStyle(
-                              color:
-                                  fromMe ? Colors.white : AppColors.ink)),
+                          style: TextStyle(color: fromMe ? Colors.white : ink)),
                     ),
                   ),
               ],

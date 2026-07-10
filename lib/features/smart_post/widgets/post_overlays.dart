@@ -651,8 +651,10 @@ class _PostMiniBarState extends State<PostMiniBar> {
         duration: Motion.fast,
         child: FrostedPanel(
           radius: 16,
-          color: Colors.black.withValues(alpha: 0.16),
-          blur: 4,
+          // Match the lighter caption/music treatment elsewhere — the
+          // photo should read clearly through this bar too.
+          color: Colors.black.withValues(alpha: 0.12),
+          blur: 1.5,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
           child: Row(
             children: [

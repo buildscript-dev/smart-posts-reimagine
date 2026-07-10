@@ -27,4 +27,8 @@ class GalleryStore {
     files.sort((a, b) => b.path.compareTo(a.path)); // newest first
     return files;
   }
+
+  static Future<void> delete(File photo) async {
+    if (await photo.exists()) await photo.delete();
+  }
 }
